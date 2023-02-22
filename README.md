@@ -1,5 +1,8 @@
 # Mix-ChatGPT-And-AI-Painting
 
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/LICENSE)
+[![qq](https://img.shields.io/badge/qq%E7%BE%A4-283430436-green.svg)](https://jq.qq.com/?_wv=1027&k=HwlnMCMr)
+
 a bot application running on Tencent QQ that integrates GPT chatbot capabilities with AI painting.
 
 一个运行于腾讯qq上的, 将gpt聊天能力与ai绘画集成的机器人应用.
