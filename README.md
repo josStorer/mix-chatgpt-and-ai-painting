@@ -1,7 +1,8 @@
 # Mix-ChatGPT-And-AI-Painting
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/LICENSE)
-[![qq](https://img.shields.io/badge/qq%E7%BE%A4-283430436-green.svg)](https://jq.qq.com/?_wv=1027&k=HwlnMCMr)
+[![qq](https://img.shields.io/badge/qq%E7%BE%A4-283430436-brightgreen.svg)](https://jq.qq.com/?_wv=1027&k=HwlnMCMr)
+[![bilibili](https://img.shields.io/badge/bilibili-%E5%9B%BD%E6%9C%8D%E7%AC%AC%E4%B8%80%E6%B5%B7%E8%B1%B9-ff69b4.svg)](https://space.bilibili.com/8261016)
 
 a bot application running on Tencent QQ that integrates GPT chatbot capabilities with AI painting.
 
