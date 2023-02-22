@@ -27,14 +27,16 @@ user image analysis. If this project can inspire or help you, I would be honored
 4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装python依赖
 5. 从huggingface下载模型权重,
    如[anything](https://huggingface.co/Linaqruf/anything-v3.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
-   放置在stable-diffusion-webui的models目录下
-6. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
+   放置在stable-diffusion-webui的`models`目录下
+6. 启动stable-diffusion-webui, 参考[sd_webui.bat](sd_webui.bat), 可考虑注释掉该项目中`launch.py`内的`prepare_environment()`调用, 以提高启动速度
+7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
-7. 在本项目的config.py内修改属于你自己的配置, 必须修改的变量为: api_key, master_id, bot_id,
-   建议考虑实际情况修改的变量为: ws_url, working_groups, auth_vip_id, local_mode, 其他请自行抉择
-8. 可选, 在本项目的几个.bat文件中, 正确配置你自己的路径, 然后设置开机启动gpu_connect.bat, 之后自己win+tab新建一个桌面干别的事情,
+8. 在本项目的[config.py](config.py)内修改属于你自己的配置, 必须修改的变量为: `api_key`, `master_id`, `bot_id`,
+   建议考虑实际情况修改的变量为: `ws_url`, `working_groups`, `auth_vip_id`, `local_mode`, 其他请自行抉择
+9. 使用`python main.py`启动本项目
+10. 可选, 在本项目的几个.bat文件中, 正确配置你自己的路径, 然后设置开机启动[gpu_connect.bat](gpu_connect.bat), 之后自己`win+tab`新建一个桌面干别的事情,
    让你的电脑闲置时给群友玩耍吧
-9. 更多详细配置, 及服务器24小时在线模式, 查看config.py
+11. 更多详细配置, 及服务器24小时在线模式, 查看[config.py](config.py)
 
 ## 指令一览
 
