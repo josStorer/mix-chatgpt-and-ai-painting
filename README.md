@@ -19,6 +19,8 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 ## 食用方法
 
+如有使用问题, 可加qq群283430436交流, 也可进行试玩
+
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases)
 2. 启动, 并选择正向websocket模式
 3. 扫码登录你的qq机器人
@@ -66,7 +68,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 修改main.py内的on_message函数, 及ws_wrapper.py, 以尝试为QQ以外的其他程序开发机器人应用
 
-### 附注
+## 附注
 
 这个项目一开始只是给沙雕群友们搞的玩具, 图一乐来着, 最近搞真人模型的时候, 顺便集成了gpt对话功能, 感觉效果还不错, 就开源了
 
