@@ -103,6 +103,8 @@ def chat_handler_thread(group_id, message, sender):
                     "email": config.email,
                     "password": config.password
                 })
+            chatbot.conversation_id = None
+            chatbot.parent_id = None
             for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                 answer = data["message"]
         except Exception as e:
