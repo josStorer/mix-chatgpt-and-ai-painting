@@ -90,7 +90,7 @@ def chat_handler_thread(group_id, message, sender):
     if not global_var.use_chatgpt:
         try:
             completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
-                                                  timeout=30, stop=['Human:', 'AI:'])
+                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
         except Exception as e:
             send_err_to_group(sender, str(e), group_id)
             return
@@ -103,7 +103,7 @@ def chat_handler_thread(group_id, message, sender):
                     "email": config.email,
                     "password": config.password
                 })
-            for data in chatbot.ask(chat_prompt):
+            for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                 answer = data["message"]
         except Exception as e:
             send_err_to_group(sender, str(e), group_id)

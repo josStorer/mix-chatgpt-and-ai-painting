@@ -29,12 +29,13 @@ ws_url = "ws://127.0.0.1:8080"  # 服务端的cqhttp地址
 gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 
-max_step = 50  # stable diffusion的最大step
 working_groups = {123, 456}  # 默认启用机器人的群号, 仍可通过在群内使用 #上线 指令主动添加
 master_id = 123456  # 机器人拥有者qq号
 bot_id = 789  # 机器人自身的qq号
 
 auth_vip_for_all = False  # 所有人都视作vip用户, 能够调用openai
+max_step = 50  # stable diffusion的最大step
+api_timeout = 40 # openai api调用的超时时间
 
 auth_vip_id = {123456, 345678}  # vip用户, 能够通过at机器人, 调用openai, 并可以使用#d来快捷绘图
 auth_ban_id = {345678}  # 有权限拉黑他人, 禁止其使用机器人的用户qq号
