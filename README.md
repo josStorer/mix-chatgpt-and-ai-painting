@@ -30,7 +30,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 3. 扫码登录你的qq机器人
 4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装python依赖
 5. 从huggingface下载模型权重,
-   如[anything](https://huggingface.co/Linaqruf/anything-v3.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
+   如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models`目录下
 6. 启动stable-diffusion-webui, 参考[sd_webui.bat](sd_webui.bat), 可考虑注释掉该项目中`launch.py`
    内的`prepare_environment()`调用, 以提高启动速度
