@@ -51,12 +51,12 @@ start_gen_tag_msg = "开始生成."  # 同时用于让远程服务器确认gpu�
 
 # AI绘画的默认参数
 default_gen = {
-    "prompt": "beautiful girl",
+    "prompt": "masterpiece, best quality, beautiful girl",
     "steps": 13,
     "width": 512,
     "height": 512,
     "cfg_scale": 7,
-    "sampler_index": "Euler a",
+    "sampler_index": "DPM++ 2M Karras",
     "seed": -1,
     "negative_prompt": "nsfw,{Multiple people},lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, "
                        "fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, "
