@@ -208,6 +208,7 @@ def operation_clear_chat(sender, message, group_id):
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.chat_history:
         at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
+        return
 
     if shared_context:
         if sender == master_id:
