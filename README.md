@@ -32,19 +32,23 @@ user image analysis. If this project can inspire or help you, I would be honored
 5. 从huggingface下载模型权重,
    如[anything](https://huggingface.co/Linaqruf/anything-v3.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models`目录下
-6. 启动stable-diffusion-webui, 参考[sd_webui.bat](sd_webui.bat), 可考虑注释掉该项目中`launch.py`内的`prepare_environment()`调用, 以提高启动速度
+6. 启动stable-diffusion-webui, 参考[sd_webui.bat](sd_webui.bat), 可考虑注释掉该项目中`launch.py`
+   内的`prepare_environment()`调用, 以提高启动速度
 7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
-8. 在本项目的[config.py](config.py)内修改属于你自己的配置, 必须修改的变量为: `api_key`, `master_id`, `bot_id`,
-   建议考虑实际情况修改的变量为: `ws_url`, `working_groups`, `auth_vip_id`, `local_mode`, 其他请自行抉择
+8. 在本项目的[config.py](config.py)内修改属于你自己的配置,
+   必须修改的变量为: `api_key`/`email,password`, `master_id`, `bot_id`,
+   建议考虑实际情况修改的变量为: `use_chatgpt`, `working_groups`, `auth_vip_for_all`, `local_mode`, 其他请自行抉择
 9. 使用`python main.py`启动本项目
-10. 可选, 在本项目的几个.bat文件中, 正确配置你自己的路径, 然后设置开机启动[gpu_connect.bat](gpu_connect.bat), 之后自己`win+tab`新建一个桌面干别的事情,
-   让你的电脑闲置时给群友玩耍吧
+10. 可选, 在本项目的几个.bat文件中, 正确配置你自己的路径, 然后设置开机启动[gpu_connect.bat](gpu_connect.bat),
+    之后自己`win+tab`新建一个桌面干别的事情,
+    让你的电脑闲置时给群友玩耍吧
 11. 更多详细配置, 及服务器24小时在线模式, 查看[config.py](config.py)
 
 ## 指令一览
 
 - 直接at机器人, 即可调用openai api进行对话, 在config.py内配置auth_vip_for_all=True授予所有人权限, 否则请使用vip指令
+- #gpt切换: 在gpt3与chatgpt模式间切换
 - #上线: 令该群聊的机器人上线, 使其允许执行openai调用和ai绘画
 - #下线: 令该群聊的机器人下线, 使其不允许执行openai调用和ai绘画
 - #画图: 令机器人在该群聊中画图, 例如: #画图 girl, 使用点或分号分隔, 允许一些快捷操作, 使用花括号允许传入细致的json配置操作,
@@ -79,8 +83,6 @@ user image analysis. If this project can inspire or help you, I would be honored
 这个项目一开始只是给沙雕群友们搞的玩具, 图一乐来着, 最近搞真人模型的时候, 顺便集成了gpt对话功能, 感觉效果还不错, 就开源了
 
 核心思路看config.py的prompt就懂了, 类似思路, 也可用于生成语音对话, 管理群聊等, 仅作抛砖引玉, 欢迎大伙fork改造
-
-目前实际使用的是gpt3, 主要是chatgpt有点慢, 且保持登录不稳定, 后续有空了我会更新一下
 
 代码和git日志很拉, 因为一开始就是个玩具项目, 直接一把梭做出来的, 而且记录里还有我自己的域名和key等隐私信息, 所以直接新建了一个项目,
 没有log了
