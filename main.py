@@ -5,6 +5,7 @@ import re
 
 import websocket
 import threading
+from revChatGPT.V1 import Chatbot
 
 import config
 import global_var
@@ -13,6 +14,7 @@ from utils import *
 from ws_wrapper import *
 
 chat_history = {}
+chatbot = None
 
 
 def image_message_handler_thread():
@@ -62,6 +64,8 @@ def get_chat_pair(group_id, sender):
 
 
 def chat_handler_thread(group_id, message, sender):
+    global chatbot
+
     if not is_group_online(group_id) or not global_var.is_gpu_connected:
         if is_remote_machine():
             at_user_in_group(sender, sender, "喵喵不在线哦~", group_id)
@@ -82,14 +86,28 @@ def chat_handler_thread(group_id, message, sender):
 
     question = message.replace(f'[CQ:at,qq={bot_id}]', '')
     chat_prompt = chat_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
-    try:
-        completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500, timeout=30,
-                                              stop=['Human:', 'AI:'])
-    except Exception as e:
-        send_err_to_group(sender, str(e), group_id)
-        return
+    answer = ""
+    if not global_var.use_chatgpt:
+        try:
+            completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
+                                                  timeout=30, stop=['Human:', 'AI:'])
+        except Exception as e:
+            send_err_to_group(sender, str(e), group_id)
+            return
 
-    answer = completion.choices[0].text
+        answer = completion.choices[0].text
+    else:
+        try:
+            if not chatbot:
+                chatbot = Chatbot(config={
+                    "email": config.email,
+                    "password": config.password
+                })
+            for data in chatbot.ask(chat_prompt):
+                answer = data["message"]
+        except Exception as e:
+            send_err_to_group(sender, str(e), group_id)
+            return
 
     chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
 

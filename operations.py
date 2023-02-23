@@ -190,6 +190,17 @@ def operation_remove_vip(sender, message, group_id):
             at_user_in_group(sender, sender, "权限不足", group_id)
 
 
+def operation_switch_gpt(sender, message, group_id):
+    if sender == master_id:
+        global_var.use_chatgpt = not global_var.use_chatgpt
+        print("use_chatgpt:", global_var.use_chatgpt)
+        if is_not_remote_machine():
+            at_user_in_group(sender, sender, "已切换至chatGPT" if global_var.use_chatgpt else "已切换至GPT3", group_id)
+    else:
+        if is_remote_machine():
+            at_user_in_group(sender, sender, "权限不足", group_id)
+
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -199,7 +210,8 @@ both_operations = {
     "#拉黑": operation_set_banned,
     "#解除": operation_remove_banned,
     "#vip": operation_add_vip,
-    "#unvip": operation_remove_vip
+    "#unvip": operation_remove_vip,
+    "#gpt切换": operation_switch_gpt
 }
 
 remote_operations = {

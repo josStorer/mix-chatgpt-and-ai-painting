@@ -20,25 +20,33 @@ local_mode = True
 shared_context = False  # 各群内所有成员共享机器人对话的上下文记录, False为每个用户独立记录对话上下文
 context_length = 6  # 对话上下文记录的长度
 
+use_chatgpt = False  # 是否使用chatgpt, True需要填写下方的邮箱和密码, False使用gpt3, 填写下方的api_key
+api_key = "sk-"  # openai的api key
+email = ""  # openai的邮箱
+password = ""  # openai的密码
+
 ws_url = "ws://127.0.0.1:8080"  # 服务端的cqhttp地址
 gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
-gpu_connected_msg = "gpu已接入"
-gpu_disconnected_msg = "gpu已离线"
-paint_command_msg = "#画图"
-delete_command_msg = "#撤回"
-start_gen_tag_msg = "开始生成."  # 同时用于让远程服务器确认gpu在线
-api_key = "sk-"  # openai的api key
+
 max_step = 50  # stable diffusion的最大step
 working_groups = {123, 456}  # 默认启用机器人的群号, 仍可通过在群内使用 #上线 指令主动添加
 master_id = 123456  # 机器人拥有者qq号
 bot_id = 789  # 机器人自身的qq号
+
 auth_vip_for_all = False  # 所有人都视作vip用户, 能够调用openai
+
 auth_vip_id = {123456, 345678}  # vip用户, 能够通过at机器人, 调用openai, 并可以使用#d来快捷绘图
 auth_ban_id = {345678}  # 有权限拉黑他人, 禁止其使用机器人的用户qq号
 auth_blacklist_id = {345678}  # 有权限查看黑名单的用户qq号
 auth_set_online_id = {345678}  # 有权限使用上线的用户qq号
 auth_set_offline_id = {345678}  # 有权限使用下线的用户qq号
+
+gpu_connected_msg = "gpu已接入"
+gpu_disconnected_msg = "gpu已离线"
+paint_command_msg = "#画图"
+delete_command_msg = "#撤回"
+start_gen_tag_msg = "开始生成."  # 同时用于让远程服务器确认gpu在线
 
 # AI绘画的默认参数
 default_gen = {
