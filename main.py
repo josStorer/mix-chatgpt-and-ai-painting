@@ -13,7 +13,6 @@ from operations import *
 from utils import *
 from ws_wrapper import *
 
-chat_history = {}
 chatbot = None
 
 
@@ -42,23 +41,17 @@ def image_message_handler_thread():
         time.sleep(0.3)
 
 
-def get_history_id(group_id, sender):
-    if shared_context:
-        return str(group_id)
-    return str(group_id) + '_' + str(sender)
-
-
 def get_chat_pair(group_id, sender):
     history_id = get_history_id(group_id, sender)
-    if history_id not in chat_history:
-        chat_history[history_id] = collections.deque(maxlen=context_length)
+    if history_id not in global_var.chat_history:
+        global_var.chat_history[history_id] = collections.deque(maxlen=context_length)
         return ''
 
-    if len(chat_history[history_id]) == 0:
+    if len(global_var.chat_history[history_id]) == 0:
         return ''
     else:
         chat_pair = ''
-        for chat in chat_history[history_id]:
+        for chat in global_var.chat_history[history_id]:
             chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
         return chat_pair
 
@@ -111,7 +104,7 @@ def chat_handler_thread(group_id, message, sender):
             send_err_to_group(sender, str(e), group_id)
             return
 
-    chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
+    global_var.chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
 
     pattern = r"\[paint_prompt:\s*(.*?)\]"
     match = re.search(pattern, answer)

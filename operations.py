@@ -201,6 +201,25 @@ def operation_switch_gpt(sender, message, group_id):
             at_user_in_group(sender, sender, "权限不足", group_id)
 
 
+def operation_clear_chat(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.chat_history:
+        at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
+
+    if shared_context:
+        if sender == master_id:
+            global_var.chat_history[history_id].clear()
+            at_user_in_group(sender, sender, "已清理群内共享对话上下文", group_id)
+        else:
+            at_user_in_group(sender, sender, "权限不足", group_id)
+    else:
+        global_var.chat_history[history_id].clear()
+        at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
+
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -211,7 +230,8 @@ both_operations = {
     "#解除": operation_remove_banned,
     "#vip": operation_add_vip,
     "#unvip": operation_remove_vip,
-    "#gpt切换": operation_switch_gpt
+    "#gpt切换": operation_switch_gpt,
+    "#清理对话": operation_clear_chat
 }
 
 remote_operations = {

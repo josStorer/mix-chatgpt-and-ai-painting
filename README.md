@@ -59,6 +59,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 - #解除: 解除对该用户的拉黑
 - #vip: 将该用户加入vip列表, vip列表内的用户可以使用 #d 指令, 也可以通过at调用机器人, 执行openai api对话
 - #unvip: 将该用户从vip列表中移除
+- #清理对话: 清理对话上下文(先前对话内容过长导致请求失败时, 可以选择清理)
 - #帮助: 显示面向群内普通用户的帮助信息, 不含vip指令和master指令
 - #默认: 显示 #画图 的默认json配置, 你可以直接复制这些信息自己修改, 然后再通过 #画图 {...} 传回去调用
 - #黑名单: 显示黑名单列表
