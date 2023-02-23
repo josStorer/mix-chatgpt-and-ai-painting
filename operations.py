@@ -37,19 +37,21 @@ def operation_gen_image(sender, message, group_id):
     if new_message.startswith("#d"):
         if is_vip(sender):
             new_message = new_message.replace("#d", "")
-            global_var.gpu_connect_confirm_timer.run()
-            if is_not_remote_machine() and is_group_online(group_id):
-                at_user_in_group(sender, sender,
-                                 f"尊贵的vip用户, 检测到您已进行了py交易, 支持使用额外指令, 现已为您{start_gen_tag_msg}",
-                                 group_id)
+            if is_group_online(group_id):
+                global_var.gpu_connect_confirm_timer.run()
+                if is_not_remote_machine():
+                    at_user_in_group(sender, sender,
+                                     f"尊贵的vip用户, 检测到您已进行了py交易, 支持使用额外指令, 现已为您{start_gen_tag_msg}",
+                                     group_id)
         else:
             if is_remote_machine():
                 operation_general_response(sender, message, group_id)
             return
     else:
-        global_var.gpu_connect_confirm_timer.run()
-        if is_not_remote_machine() and is_group_online(group_id):
-            at_user_in_group(sender, sender, f"收到, {start_gen_tag_msg}", group_id)
+        if is_group_online(group_id):
+            global_var.gpu_connect_confirm_timer.run()
+            if is_not_remote_machine():
+                at_user_in_group(sender, sender, f"收到, {start_gen_tag_msg}", group_id)
 
     new_message = new_message.replace(paint_command_msg, "")
     new_message = new_message.strip()
