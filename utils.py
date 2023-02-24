@@ -61,8 +61,8 @@ def at_user_in_group(message_source, at_user_id, text, group_id):
     send_message_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id)
 
 
-def send_err_to_group(message_source, text, group_id):
-    at_user_in_group(message_source, message_source, f"错误:\n{text}", group_id)
+def send_err_to_group(message_source, e, group_id):
+    at_user_in_group(message_source, message_source, f"错误:\n{str(e) if str(e) != '' else e.message}", group_id)
 
 
 class ResettableTimer(object):

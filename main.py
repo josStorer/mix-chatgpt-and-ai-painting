@@ -32,7 +32,7 @@ def image_message_handler_thread():
                         else:
                             at_user_in_group(sender, sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id)
                     except Exception as e:
-                        send_err_to_group(sender, str(e), group_id)
+                        send_err_to_group(sender, e, group_id)
             else:
                 if not is_group_online(group_id):
                     at_user_in_group(sender, sender, "该群聊响应未上线", group_id)
@@ -85,7 +85,7 @@ def chat_handler_thread(group_id, message, sender):
             completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
                                                   timeout=api_timeout, stop=['Human:', 'AI:'])
         except Exception as e:
-            send_err_to_group(sender, str(e), group_id)
+            send_err_to_group(sender, e, group_id)
             return
 
         answer = completion.choices[0].text
@@ -101,7 +101,7 @@ def chat_handler_thread(group_id, message, sender):
             for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                 answer = data["message"]
         except Exception as e:
-            send_err_to_group(sender, str(e), group_id)
+            send_err_to_group(sender, e, group_id)
             return
 
     global_var.chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})

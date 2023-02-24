@@ -63,7 +63,7 @@ def operation_gen_image(sender, message, group_id):
             global_var.image_gen_messages.append((obj, sender, group_id, False))
         except Exception as e:
             if is_remote_machine():
-                send_err_to_group(sender, str(e), group_id)
+                send_err_to_group(sender, e, group_id)
     else:
         try:
             res = new_message.replace(";", ".").split('.', 3)
@@ -95,7 +95,7 @@ def operation_gen_image(sender, message, group_id):
             global_var.image_gen_messages.append((gen_message, sender, group_id, False))
         except Exception as e:
             if is_remote_machine():
-                send_err_to_group(sender, str(e), group_id)
+                send_err_to_group(sender, e, group_id)
 
 
 def operation_delete_msg(sender, _, group_id):
