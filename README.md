@@ -33,7 +33,8 @@ user image analysis. If this project can inspire or help you, I would be honored
    如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models/Stable-diffusion`目录下
 6. 启动stable-diffusion-webui, 参考[sd_webui.bat](sd_webui.bat), 可考虑注释掉该项目中`launch.py`
-   内的`prepare_environment()`调用, 以提高启动速度
+   内的`prepare_environment()`调用, 以提高启动速度, 如果所有依赖安装正常, 也可以直接用webui.py启动, 如
+   `python webui.py --medvram --deepdanbooru --xformers --api`
 7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
 8. 在本项目的[config.py](config.py)内修改属于你自己的配置,
