@@ -23,7 +23,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 ## 食用方法
 
-如有使用问题, 可加qq群283430436交流, 也可进行试玩
+如有使用问题, 可加qq群283430436交流, 也可进行试玩, chatgpt模式下可能遇到登录错误, 请在[main.py#L95](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L95)邮箱密码后添加`"proxy": "你的代理地址"`
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases)
 2. 启动, 并选择正向websocket模式
