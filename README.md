@@ -21,9 +21,16 @@ user image analysis. If this project can inspire or help you, I would be honored
 <img src="screenshots/example1.png" width="400" alt="chat example"/>
 </div>
 
-## 食用方法
+## 常见问题
 
-如有使用问题, 可加qq群283430436交流, 也可进行试玩, chatgpt模式下可能遇到登录错误, 请在[main.py#L95](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L95)邮箱密码后添加`"proxy": "你的代理地址"`
+1. 画图时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
+  - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理, 请在[main.py#L95](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L95)邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
+2. 画图时, 机器人提示, `错误: 'images'`
+  - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包, 请找到相关启动文件(一般是.bat后缀) 找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格
+
+如有使用问题, 可加qq群283430436交流, 也可进行试玩
+
+## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases)
 2. 启动, 并选择正向websocket模式
