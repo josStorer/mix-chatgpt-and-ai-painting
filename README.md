@@ -74,7 +74,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 - #帮助: 显示面向群内普通用户的帮助信息, 不含vip指令和master指令
 - #默认: 显示 #画图 的默认json配置, 你可以直接复制这些信息自己修改, 然后再通过 #画图 {...} 传回去调用
 - #黑名单: 显示黑名单列表
-- #at开关: 切换是否需要at机器人的状态
+- #at切换: 切换机器人响应模式, 默认总是需要at机器人以进行openai回复, 切换后可以直接对话, 对每句话都进行回复
 
 ## 文件功能说明
 

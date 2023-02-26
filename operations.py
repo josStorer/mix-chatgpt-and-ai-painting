@@ -221,18 +221,18 @@ def operation_clear_chat(sender, message, group_id):
         at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
 
 
-def operation_switch_at(sender, message, group_id):
+def operation_switch_at_mode(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.user_needat:
-        global_var.user_needat[history_id] = True
-        at_user_in_group(sender, sender, "已无需at即可对话", group_id)
+    if history_id not in global_var.users_not_need_at:
+        global_var.users_not_need_at[history_id] = True
+        at_user_in_group(sender, sender, "你已无需at即可对话", group_id)
         return
 
-    del global_var.user_needat[history_id]
-    at_user_in_group(sender, sender, "恢复到需要at再进行对话", group_id)
+    del global_var.users_not_need_at[history_id]
+    at_user_in_group(sender, sender, "你已恢复到需要at机器人再进行对话", group_id)
 
 
 both_operations = {
@@ -247,7 +247,7 @@ both_operations = {
     "#unvip": operation_remove_vip,
     "#gpt切换": operation_switch_gpt,
     "#清理对话": operation_clear_chat,
-    "#at开关": operation_switch_at
+    "#at切换": operation_switch_at_mode
  }
 
 remote_operations = {
