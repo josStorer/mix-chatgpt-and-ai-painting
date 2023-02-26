@@ -221,6 +221,20 @@ def operation_clear_chat(sender, message, group_id):
         at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
 
 
+def operation_switch_at(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.user_needat:
+        global_var.user_needat[history_id] = True
+        at_user_in_group(sender, sender, "已无需at即可对话", group_id)
+        return
+
+    del global_var.user_needat[history_id]
+    at_user_in_group(sender, sender, "恢复到需要at再进行对话", group_id)
+
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -232,8 +246,9 @@ both_operations = {
     "#vip": operation_add_vip,
     "#unvip": operation_remove_vip,
     "#gpt切换": operation_switch_gpt,
-    "#清理对话": operation_clear_chat
-}
+    "#清理对话": operation_clear_chat,
+    "#at开关": operation_switch_at
+ }
 
 remote_operations = {
     "#帮助": operation_help,

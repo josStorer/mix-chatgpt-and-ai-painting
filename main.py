@@ -129,7 +129,8 @@ def message_handler(message: str, sender, group_id):
         return
     print(f"get {message} from {group_id}, sender: {sender}")
 
-    if message.startswith(f'[CQ:at,qq={bot_id}]'):
+    if message.startswith(f'[CQ:at,qq={bot_id}]') or \
+    (get_history_id(group_id, sender) in global_var.user_needat and not message.startswith('#')):
         threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
 
     if message.startswith('#'):
