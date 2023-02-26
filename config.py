@@ -35,7 +35,7 @@ bot_id = 789  # 机器人自身的qq号
 
 auth_vip_for_all = False  # 所有人都视作vip用户, 能够调用openai
 max_step = 50  # stable diffusion的最大step
-api_timeout = 40 # openai api调用的超时时间
+api_timeout = 40  # openai api调用的超时时间
 
 auth_vip_id = {123456, 345678}  # vip用户, 能够通过at机器人, 调用openai, 并可以使用#d来快捷绘图
 auth_ban_id = {345678}  # 有权限拉黑他人, 禁止其使用机器人的用户qq号
@@ -75,3 +75,45 @@ chat_prompt_base = '以下是与一只可爱的猫娘的对话。猫娘是一种
                    '并在回复末尾插入\'[paint_prompt:\'生成的关键词或句子\']\'供后台的AI绘画程序使用，' \
                    '对于其他常规对话，则不需要插入这些关键词, 只需要直接回复。' \
                    '以下使用\'Human:\'开头的内容就是主人的话，而\'AI:\'开头的内容则是猫娘的回复。\n\n'
+
+# 使用 "#画图" 指令传json, 可用的所有参数及默认值如下, 也可填入以上default_gen中
+# {
+#     "enable_hr": False,
+#     "denoising_strength": 0,
+#     "firstphase_width": 0,
+#     "firstphase_height": 0,
+#     "hr_scale": 2,
+#     "hr_upscaler": "string",
+#     "hr_second_pass_steps": 0,
+#     "hr_resize_x": 0,
+#     "hr_resize_y": 0,
+#     "prompt": "",
+#     "styles": [
+#         "string"
+#     ],
+#     "seed": -1,
+#     "subseed": -1,
+#     "subseed_strength": 0,
+#     "seed_resize_from_h": -1,
+#     "seed_resize_from_w": -1,
+#     "sampler_name": "string",
+#     "batch_size": 1,
+#     "n_iter": 1,
+#     "steps": 50,
+#     "cfg_scale": 7,
+#     "width": 512,
+#     "height": 512,
+#     "restore_faces": False,
+#     "tiling": False,
+#     "negative_prompt": "string",
+#     "eta": 0,
+#     "s_churn": 0,
+#     "s_tmax": 0,
+#     "s_tmin": 0,
+#     "s_noise": 1,
+#     "override_settings": {},
+#     "override_settings_restore_afterwards": True,
+#     "script_args": [],
+#     "sampler_index": "Euler",
+#     "script_name": "string"
+# }
