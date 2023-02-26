@@ -205,7 +205,7 @@ def operation_clear_chat(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
-    history_id = get_history_id(group_id, sender)
+    history_id = get_sender_key_in_group(group_id, sender)
     if history_id not in global_var.chat_history:
         at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
         return
@@ -225,13 +225,13 @@ def operation_switch_at_mode(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
-    history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.users_not_need_at:
-        global_var.users_not_need_at[history_id] = True
+    sender_key = get_sender_key_in_group(group_id, sender)
+    if sender_key not in global_var.users_not_need_at:
+        global_var.users_not_need_at[sender_key] = True
         at_user_in_group(sender, sender, "你已无需at即可对话", group_id)
         return
 
-    del global_var.users_not_need_at[history_id]
+    del global_var.users_not_need_at[sender_key]
     at_user_in_group(sender, sender, "你已恢复到需要at机器人再进行对话", group_id)
 
 
