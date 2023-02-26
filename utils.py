@@ -27,7 +27,7 @@ def is_not_remote_machine():
     return local_mode or not global_var.is_remote_machine
 
 
-def get_history_id(group_id, sender):
+def get_sender_key_in_group(group_id, sender):
     if shared_context:
         return str(group_id)
     return str(group_id) + '_' + str(sender)

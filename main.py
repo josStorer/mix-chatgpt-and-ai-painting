@@ -42,7 +42,7 @@ def image_message_handler_thread():
 
 
 def get_chat_pair(group_id, sender):
-    history_id = get_history_id(group_id, sender)
+    history_id = get_sender_key_in_group(group_id, sender)
     if history_id not in global_var.chat_history:
         global_var.chat_history[history_id] = collections.deque(maxlen=context_length)
         return ''
@@ -104,7 +104,7 @@ def chat_handler_thread(group_id, message, sender):
             send_err_to_group(sender, e, group_id)
             return
 
-    global_var.chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
+    global_var.chat_history[get_sender_key_in_group(group_id, sender)].append({"question": question, "answer": answer})
 
     pattern = r"\[paint_prompt:\s*(.*?)\]"
     match = re.search(pattern, answer)
@@ -129,7 +129,8 @@ def message_handler(message: str, sender, group_id):
         return
     print(f"get {message} from {group_id}, sender: {sender}")
 
-    if message.startswith(f'[CQ:at,qq={bot_id}]'):
+    if message.startswith(f'[CQ:at,qq={bot_id}]') or (
+            get_sender_key_in_group(group_id, sender) in global_var.users_not_need_at and not message.startswith('#')):
         threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
 
     if message.startswith('#'):
