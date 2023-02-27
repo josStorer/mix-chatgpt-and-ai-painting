@@ -1,8 +1,8 @@
 #
-# 默认设置适用于, 没有服务器, 仅有一台本地电脑, 由该电脑提供消息响应, 并有gpu进行AI绘画
-# 启动AI绘画服务, 及cqhttp后, 再运行本程序即可(python main.py), cqhttp也可配置为远程服务器地址
+# 默认设置适用于, 仅有一台电脑(可以是单台服务器), 由该电脑提供消息响应, 并有gpu进行AI绘画
+# 启动AI绘画服务, 及cqhttp后, 再运行本程序即可(python main.py), AI绘画服务和cqhttp也可配置为远程服务器地址
 #
-# 如果希望适用于, 一台远程服务器, 24小时提供消息响应, 本地自用的有gpu的电脑, 开机时接入提供额外服务,
+# 如果希望适用于, 一台远程服务器, 24小时提供消息响应, 本地自用的有gpu的电脑, 开机或其他你决定的时间接入, 提供额外服务(也可以是远程gpu服务器, 而你不希望24小时接入),
 # 则将local_mode设为False, 并建议将gpu_connect_notify, gpu_disconnect_notify设为True
 #
 
@@ -11,10 +11,10 @@
 gpu_connect_notify = False  # 上线通知发送给working_groups中配置的群号
 gpu_disconnect_notify = False
 
-# 设为True时, 仅本地端运行, 单端模式;
+# 设为True时, 仅本地端运行, 单端模式, 可以是远程服务器的单端;
 # 设为False, 则需要在服务器启动本程序, 并携带任意参数, 如"python main.py 1",
-# 同时有gpu的电脑执行"python main.py",
-# 服务端负责提供一些消息回复, 保持在线, 客户端则是开机时提供显卡进行AI绘画, 和openai调用
+# 同时有gpu的电脑执行"python main.py", 当然你也可以在本地使用这一模式, 只是你需要启动两个本程序, 分别是"python main.py 1"和"python main.py"
+# 服务端负责提供一些消息回复, 保持在线, 客户端则是开机时或其他你决定的时间提供显卡进行AI绘画, 和openai调用
 local_mode = True
 
 shared_context = False  # 各群内所有成员共享机器人对话的上下文记录, False为每个用户独立记录对话上下文
@@ -25,9 +25,9 @@ api_key = "sk-"  # openai的api key
 email = ""  # openai的邮箱
 password = ""  # openai的密码
 
-ws_url = "ws://127.0.0.1:8080"  # 服务端的cqhttp地址
-gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
-gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
+ws_url = "ws://127.0.0.1:8080"  # cqhttp地址, 可以是本地, 也可以是远程
+gpu_url = "http://127.0.0.1:7860"  # stable diffusion webui服务地址, 可以是本地, 也可以是远程
+gpu_api_path = "/sdapi/v1/txt2img"  # stable diffusion webui的绘画API路径, 一般保持默认即可
 
 working_groups = {123, 456}  # 默认启用机器人的群号, 仍可通过在群内使用 #上线 指令主动添加
 master_id = 123456  # 机器人拥有者qq号
