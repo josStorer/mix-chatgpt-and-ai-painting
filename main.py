@@ -167,10 +167,11 @@ def on_message(self, message):
 
 
 def on_error(self, error):
-    print("err: " + str(error))
+    print("错误:\n" + str(error))
 
 
 def on_open(self):
+    print("连接成功")
     if gpu_connect_notify and is_not_remote_machine():
         for group in working_groups:
             send_message_to_group(bot_id, gpu_connected_msg, group)

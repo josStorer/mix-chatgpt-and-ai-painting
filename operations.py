@@ -190,7 +190,7 @@ def operation_remove_vip(sender, message, group_id):
             at_user_in_group(sender, sender, "权限不足", group_id)
 
 
-def operation_switch_gpt(sender, message, group_id):
+def operation_switch_gpt(sender, _, group_id):
     if sender == master_id:
         global_var.use_chatgpt = not global_var.use_chatgpt
         print("use_chatgpt:", global_var.use_chatgpt)
@@ -201,7 +201,7 @@ def operation_switch_gpt(sender, message, group_id):
             at_user_in_group(sender, sender, "权限不足", group_id)
 
 
-def operation_clear_chat(sender, message, group_id):
+def operation_clear_chat(sender, _, group_id):
     if global_var.is_remote_machine:
         return
 
@@ -221,7 +221,7 @@ def operation_clear_chat(sender, message, group_id):
         at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
 
 
-def operation_switch_at_mode(sender, message, group_id):
+def operation_switch_at_mode(sender, _, group_id):
     if global_var.is_remote_machine:
         return
 
@@ -233,6 +233,69 @@ def operation_switch_at_mode(sender, message, group_id):
 
     del global_var.users_not_need_at[sender_key]
     at_user_in_group(sender, sender, "你已恢复到需要at机器人再进行对话", group_id)
+
+
+def operation_switch_model(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    if sender != master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#model", "")
+    new_message = new_message.strip()
+
+    response = requests.get(f"{gpu_url}/sdapi/v1/sd-models")
+
+    if response.status_code == 200:
+        models = [model["title"] for model in response.json()]
+    else:
+        at_user_in_group(sender, sender, "获取模型列表失败", group_id)
+        return
+
+    try:
+        options = requests.get(f"{gpu_url}/sdapi/v1/options").json()
+        if new_message == "":
+            at_user_in_group(
+                sender, sender, f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id)
+        else:
+            for model_title in models:
+                if new_message.lower() in model_title.lower():
+                    options['sd_model_checkpoint'] = model_title
+                    requests.post(f"{gpu_url}/sdapi/v1/options", json=options)
+                    at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id)
+                    return
+            at_user_in_group(sender, sender, "未找到匹配的模型", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+
+
+def operation_switch_vae(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    if sender != master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#vae", "")
+    new_message = new_message.strip()
+
+    try:
+        options = requests.get(f"{gpu_url}/sdapi/v1/options").json()
+        if new_message == "":
+            at_user_in_group(sender, sender, f"当前激活VAE:\n{options['sd_vae']}", group_id)
+        else:
+            old_vae = options['sd_vae']
+            options['sd_vae'] = new_message
+            requests.post(f"{gpu_url}/sdapi/v1/options", json=options)
+            at_user_in_group(
+                sender, sender, f"已尝试切换VAE, 注意VAE切换必须准确匹配名称\n如果出现效果异常, 可能是切换错误\n可切换回先前的VAE:\n{old_vae}", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
 
 
 both_operations = {
@@ -247,8 +310,10 @@ both_operations = {
     "#unvip": operation_remove_vip,
     "#gpt切换": operation_switch_gpt,
     "#清理对话": operation_clear_chat,
-    "#at切换": operation_switch_at_mode
- }
+    "#at切换": operation_switch_at_mode,
+    "#model": operation_switch_model,
+    "#vae": operation_switch_vae
+}
 
 remote_operations = {
     "#帮助": operation_help,

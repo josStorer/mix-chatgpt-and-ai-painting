@@ -50,6 +50,9 @@ def gen_image(sender, gen_message, group_id):
     if response.status_code == 503:
         raise Exception(gpu_disconnected_msg)
 
+    if response.status_code != 200:
+        raise Exception(response.status_code+": "+response.text)
+
     r = response.json()
 
     image = r['images'][0].split(",", 1)[0]
