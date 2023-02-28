@@ -111,12 +111,15 @@ def chat_handler_thread(group_id, message, sender):
     if match:
         at_user_in_group(sender, sender, re.sub(pattern, '', answer), group_id)
         extracted_text = match.group(1)
-        global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
+        # global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
+        send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
     else:
         at_user_in_group(sender, sender, answer, group_id)
 
 
 def message_handler(message: str, sender, group_id):
+    if sender in auth_blacklist_id:
+        return
     if sender == bot_id:
         print(f"bot response in {group_id}: {message[:60]}...")
         if gpu_connected_msg in message:
@@ -129,7 +132,8 @@ def message_handler(message: str, sender, group_id):
         return
     print(f"get {message} from {group_id}, sender: {sender}")
 
-    if message.startswith(f'[CQ:at,qq={bot_id}]'):
+    if message.startswith(f'[CQ:at,qq={bot_id}]') or \
+    (get_history_id(group_id, sender) in global_var.user_needat and not message.startswith('#')):
         threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
 
     if message.startswith('#'):

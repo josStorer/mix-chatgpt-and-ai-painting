@@ -33,6 +33,7 @@ def operation_set_offline(sender, _, group_id):
 
 
 def operation_gen_image(sender, message, group_id):
+    return
     new_message = message
     if new_message.startswith("#d"):
         if is_vip(sender):
@@ -221,6 +222,55 @@ def operation_clear_chat(sender, message, group_id):
         at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
 
 
+def operation_switch_at(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.user_needat:
+        global_var.user_needat[history_id] = True
+        at_user_in_group(sender, sender, "已无需at即可对话", group_id)
+        return
+
+    del global_var.user_needat[history_id]
+    at_user_in_group(sender, sender, "恢复到需要at再进行对话", group_id)
+
+def operation_switch_voice(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.user_needvoice:
+        at_user_in_group(sender, sender, "已开启语音对话", group_id)
+        global_var.user_needvoice[history_id] = 3
+        return
+
+    del global_var.user_needvoice[history_id]
+    at_user_in_group(sender, sender, "恢复到文本对话", group_id)
+
+def operation_switch_sound(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.user_needvoice:
+        at_user_in_group(sender, sender, "检测到还没有开启语音对话。已为你开启语音对话", group_id)
+        global_var.user_needvoice[history_id] = 3
+        return
+
+    global_var.user_needvoice[history_id] = (global_var.user_needvoice[history_id] + 1) % 4
+    speaker_dict = {
+        0:"綾地寧々放送です",
+        1:"ありはら ななみ放送です",
+        2:"现在是小茸与您对话",
+        3:"现在是唐乐吟与您对话"
+    }
+    if global_var.user_needvoice[history_id] in [0,1]:
+        send_record_to_group_jp(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
+    else:
+        send_record_to_group(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
+
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -232,8 +282,11 @@ both_operations = {
     "#vip": operation_add_vip,
     "#unvip": operation_remove_vip,
     "#gpt切换": operation_switch_gpt,
-    "#清理对话": operation_clear_chat
-}
+    "#清理对话": operation_clear_chat,
+    "#at切换": operation_switch_at,
+    "#语音切换": operation_switch_voice,
+    "#音色切换": operation_switch_sound
+ }
 
 remote_operations = {
     "#帮助": operation_help,
