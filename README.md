@@ -29,6 +29,8 @@ user image analysis. If this project can inspire or help you, I would be honored
 2. 画图时, 机器人提示, `错误: 'images'`
   - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包, 请找到相关启动文件(一般是.bat后缀),
   找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格
+3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
+  - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
 
 如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
