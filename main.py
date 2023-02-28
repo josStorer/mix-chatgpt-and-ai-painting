@@ -56,7 +56,7 @@ def get_chat_pair(group_id, sender):
         return chat_pair
 
 
-def chat_handler_thread(group_id, message, sender):
+def chat_handler_thread(group_id, question, sender):
     global chatbot
 
     if not is_group_online(group_id) or not global_var.is_gpu_connected:
@@ -77,7 +77,6 @@ def chat_handler_thread(group_id, message, sender):
     if global_var.is_remote_machine:
         return
 
-    question = message.replace(f'[CQ:at,qq={bot_id}]', '')
     chat_prompt = chat_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
     answer = ""
     if not global_var.use_chatgpt:
@@ -129,8 +128,12 @@ def message_handler(message: str, sender, group_id):
         return
     print(f"get {message} from {group_id}, sender: {sender}")
 
-    if message.startswith(f'[CQ:at,qq={bot_id}]') or (
-            get_sender_key_in_group(group_id, sender) in global_var.users_not_need_at and not message.startswith('#')):
+    if message.startswith(f'[CQ:at,qq={bot_id}]'):
+        message = message.replace(f'[CQ:at,qq={bot_id}]', '')
+        message = message.strip()
+        if not message.startswith('#'):
+            threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
+    elif not message.startswith('#') and get_sender_key_in_group(group_id, sender) in global_var.users_not_need_at:
         threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
 
     if message.startswith('#'):

@@ -60,7 +60,8 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 ## 指令一览
 
-- 直接at机器人, 即可调用openai api进行对话, 在config.py内配置auth_vip_for_all=True授予所有人权限, 否则请使用vip指令
+- 直接at机器人, 即可调用openai api进行对话, 在config.py内配置auth_vip_for_all=True授予所有人权限, 否则请使用vip指令授权指定qq号
+- 通过at机器人+警号指令, 可操作指定机器人, 例如`@机器人1号 #上线`, 适用于群内有多个机器人的情况, 而直接使用警号指令则作用于所有机器人
 - #gpt切换: 在gpt3与chatgpt模式间切换
 - #上线: 令该群聊的机器人上线, 使其允许执行openai调用和ai绘画
 - #下线: 令该群聊的机器人下线, 使其不允许执行openai调用和ai绘画
