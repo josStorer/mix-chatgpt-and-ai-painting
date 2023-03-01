@@ -51,7 +51,7 @@ def gen_image(sender, gen_message, group_id):
         raise Exception(gpu_disconnected_msg)
 
     if response.status_code != 200:
-        raise Exception(response.status_code+": "+response.text)
+        raise Exception(str(response.status_code) + ": " + response.text)
 
     r = response.json()
 
