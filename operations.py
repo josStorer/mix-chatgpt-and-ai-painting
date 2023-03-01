@@ -242,7 +242,7 @@ def operation_switch_voice(sender, message, group_id):
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
         at_user_in_group(sender, sender, "已开启语音对话", group_id)
-        global_var.user_needvoice[history_id] = 3
+        global_var.user_needvoice[history_id] = 4
         return
 
     del global_var.user_needvoice[history_id]
@@ -255,16 +255,19 @@ def operation_switch_sound(sender, message, group_id):
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
         at_user_in_group(sender, sender, "检测到还没有开启语音对话。已为你开启语音对话", group_id)
-        global_var.user_needvoice[history_id] = 3
+        global_var.user_needvoice[history_id] = 4
         return
 
-    global_var.user_needvoice[history_id] = (global_var.user_needvoice[history_id] + 1) % 4
     speaker_dict = {
         0:"綾地寧々放送です",
         1:"ありはら ななみ放送です",
         2:"现在是小茸与您对话",
-        3:"现在是唐乐吟与您对话"
+        3:"现在是唐乐吟与您对话",
+        4:"现在是锦木千束与您对话",
+        5:"现在是刻晴与您对话",
+        6:"现在是优菈与您对话",
     }
+    global_var.user_needvoice[history_id] = (global_var.user_needvoice[history_id] + 1) % len(speaker_dict)
     if global_var.user_needvoice[history_id] in [0,1]:
         send_record_to_group_jp(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
     else:
