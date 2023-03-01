@@ -58,8 +58,8 @@ def gen_image(sender, gen_message, group_id):
 
 
 def at_user_in_group(message_source, at_user_id, text, group_id):
-    if text == "权限不足":
-        return
+    # if text == "权限不足":
+    #     return
     history_id = get_history_id(group_id, at_user_id)
     if history_id in global_var.user_needvoice:
         send_record_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id, global_var.user_needvoice[history_id])

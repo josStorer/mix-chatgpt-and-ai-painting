@@ -94,7 +94,8 @@ def chat_handler_thread(group_id, message, sender):
             if not chatbot:
                 chatbot = Chatbot(config={
                     "email": config.email,
-                    "password": config.password
+                    "password": config.password,
+                    "proxy": "127.0.0.1:19180"
                 })
             chatbot.conversation_id = None
             chatbot.parent_id = None

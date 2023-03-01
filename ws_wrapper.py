@@ -10,6 +10,7 @@ path_out = "output.mp3"
 
 
 def send_message_to_group(message_source, message, group_id):
+    print(f"[Res]{message}[Res]")
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
