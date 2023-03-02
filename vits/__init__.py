@@ -1,1 +1,1 @@
-__all__ = ['attentions', 'commons', 'mel_processing', 'models', 'modules', 'transforms', 'utils']
+__all__ = ['attentions', 'commons', 'mel_processing', 'models', 'modules', 'transforms', 'utils', 'symbols']

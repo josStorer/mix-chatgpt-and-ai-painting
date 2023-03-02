@@ -255,7 +255,7 @@ def operation_switch_sound(sender, message, group_id):
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
         at_user_in_group(sender, sender, "检测到还没有开启语音对话。已为你开启语音对话", group_id)
-        global_var.user_needvoice[history_id] = 4
+        global_var.user_needvoice[history_id] = 6
         return
 
     speaker_dict = {
@@ -266,12 +266,22 @@ def operation_switch_sound(sender, message, group_id):
         4:"现在是锦木千束与您对话",
         5:"现在是刻晴与您对话",
         6:"现在是优菈与您对话",
+        7:"现在是派蒙与您对话"
     }
     global_var.user_needvoice[history_id] = (global_var.user_needvoice[history_id] + 1) % len(speaker_dict)
     if global_var.user_needvoice[history_id] in [0,1]:
         send_record_to_group_jp(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
     else:
         send_record_to_group(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
+
+def operation_voice(sender, message, group_id):
+    message = message.replace("#朗读 ","")
+    history_id = get_history_id(group_id, sender)
+    if history_id not in global_var.user_needvoice:
+        operation_switch_sound(sender, message, group_id)
+        return
+    send_record_to_group(sender, f"{message}", group_id, global_var.user_needvoice[history_id])
+    return
 
 
 both_operations = {
@@ -288,7 +298,8 @@ both_operations = {
     "#清理对话": operation_clear_chat,
     "#at切换": operation_switch_at,
     "#语音切换": operation_switch_voice,
-    "#音色切换": operation_switch_sound
+    "#音色切换": operation_switch_sound,
+    "#朗读": operation_voice
  }
 
 remote_operations = {

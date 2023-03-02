@@ -143,3 +143,9 @@ def chinese_dialect_cleaners(text):
     text = re.sub(r'\s+$', '', text)
     text = re.sub(r'([^\.,!\?\-…~])$', r'\1.', text)
     return text
+
+def chinese_cleaners1(text):
+    from pypinyin import Style, pinyin
+
+    phones = [phone[0] for phone in pinyin(text, style=Style.TONE3)]
+    return ' '.join(phones)

@@ -1,6 +1,6 @@
 from scipy.io.wavfile import write
 from vits.mel_processing import spectrogram_torch
-from text import text_to_sequence, _clean_text
+from text import text_to_sequence, text_to_sequence_paimon
 import vits.utils as utils
 import vits.commons as commons
 from vits.models import SynthesizerTrn
@@ -8,6 +8,7 @@ import sys
 import re
 from torch import no_grad, LongTensor
 from winsound import PlaySound
+from vits.symbols import symbols as symbols_for_paimon
 
 idmessage = """ID      Speaker
 0       綾地寧々
@@ -23,6 +24,7 @@ speaker_dict = {
     4:"chisato",
     5:"keqing",
     6:"eula",
+    7:"paimon",
 }
 
 def get_pth_speaker_id(speakerID):
@@ -31,11 +33,17 @@ def get_pth_speaker_id(speakerID):
     return {
         4:0,
         5:115,
-        6:124
+        6:124,
+        7:0
     }[speakerID]
 
 def is_multi(speakerID):
     return speakerID in [5,6]
+
+def get_lnnw(speakerID):
+    if speakerID <= 3 or speakerID == 7:
+        return 1, 0.667, 0.8
+    return 1.2, 0.6, 0.668
 
 def ex_print(text, escape=False):
     if escape:
@@ -48,6 +56,13 @@ def get_text(text, hps, cleaned=False):
         text_norm = text_to_sequence(text, hps.symbols, [])
     else:
         text_norm = text_to_sequence(text, hps.symbols, hps.data.text_cleaners)
+    if hps.data.add_blank:
+        text_norm = commons.intersperse(text_norm, 0)
+    text_norm = LongTensor(text_norm)
+    return text_norm
+
+def get_text_paimon(text, hps):
+    text_norm = text_to_sequence_paimon(text, hps.data.text_cleaners)
     if hps.data.add_blank:
         text_norm = commons.intersperse(text_norm, 0)
     text_norm = LongTensor(text_norm)
@@ -88,9 +103,6 @@ def generateSound(inputString,language,speakerID = 3):
     else:
         escape = False
 
-
-    #model = input('Path of a VITS model: ')
-    #config = input('Path of a config file: ')
     if language=="ch":
         model = r".\model\CN\model.pth"
         config = r".\model\CN\config.json"
@@ -104,14 +116,41 @@ def generateSound(inputString,language,speakerID = 3):
     if speakerID > 3: 
     #   锦木千束
         en_name = speaker_dict[speakerID]
-        model = f".\\model\{en_name}\\{en_name}.pth"
+        model = f".\\model\\{en_name}\\{en_name}.pth"
         config = r".\model\config804.json"
+
+        if speakerID == 7:
+            config = f".\\model\\{en_name}\\config_{en_name}.json"
+            hps_ms = utils.get_hparams_from_file(config)
+            net_g = SynthesizerTrn(
+                len(symbols_for_paimon),
+                hps_ms.data.filter_length // 2 + 1,
+                hps_ms.train.segment_size // hps_ms.data.hop_length,
+                **hps_ms.model)
+            _ = net_g.eval()
+
+            _ = utils.load_checkpoint(model, net_g)
+            import soundfile as sf
+            text = inputString # "现在是派蒙与您对话" #@param {type: 'string'}
+            length_scale = 1 #@param {type:"slider", min:0.1, max:3, step:0.05}
+            filename = 'output' #@param {type: "string"}
+            audio_path = f'{filename}.wav'
+            stn_tst = get_text_paimon(text, hps_ms)
+            with no_grad():
+                x_tst = stn_tst.unsqueeze(0)
+                x_tst_lengths = LongTensor([stn_tst.size(0)])
+                audio = net_g.infer(x_tst, x_tst_lengths, noise_scale=.667, noise_scale_w=0.8, length_scale=length_scale)[0][0,0].data.cpu().float().numpy()
+
+            sf.write(audio_path,audio,samplerate=hps_ms.data.sampling_rate)
+            print('Successfully saved!')
+            return
 
     hps_ms = utils.get_hparams_from_file(config)
     n_speakers = hps_ms.data.n_speakers if is_multi(speakerID) else 0
+    # @note:留着这段，以后再做通用处理吧，累了
+    # if speakerID == 7:
+    #     hps_ms.symbols = symbols_for_paimon
     n_symbols = len(hps_ms.symbols) if 'symbols' in hps_ms.keys() else 0
-    speakers = hps_ms.speakers if 'speakers' in hps_ms.keys() else ['0']
-    use_f0 = hps_ms.data.use_f0 if 'use_f0' in hps_ms.data.keys() else False
     emotion_embedding = hps_ms.data.emotion_embedding if 'emotion_embedding' in hps_ms.data.keys() else False
 
     net_g_ms = SynthesizerTrn(
@@ -126,42 +165,26 @@ def generateSound(inputString,language,speakerID = 3):
 
     if n_symbols != 0:
         if not emotion_embedding:
-            #while True:
-            if(1==1):
-                #choice = input('TTS or VC? (t/v):')
-                choice = 't'
-                if choice == 't':
-                    #text = input('Text to read: ')
-                    text = inputString
-                    if text == '[ADVANCED]':
-                        #text = input('Raw text:')
-                        text = "我不会说"
-                        #print('Cleaned text is:')
-                        #ex_print(_clean_text(
-                        #    text, hps_ms.data.text_cleaners), escape)
-                        #continue
+            text = inputString
+            if text == '[ADVANCED]':
+                text = "我不会说"
 
-                    length_scale, text = get_label_value(
-                        text, 'LENGTH', 1.2, 'length scale') #1
-                    noise_scale, text = get_label_value(
-                        text, 'NOISE', 0.6, 'noise scale') #0.667
-                    noise_scale_w, text = get_label_value(
-                        text, 'NOISEW', 0.668, 'deviation of noise') #0.8
-                    cleaned, text = get_label(text, 'CLEANED')
+            length_scale, noise_scale, noise_scale_w = get_lnnw(speakerID)
 
-                    stn_tst = get_text(text, hps_ms, cleaned=cleaned)
+            cleaned, text = get_label(text, 'CLEANED')
 
-                    speaker_id = get_pth_speaker_id(speakerID)
-                    #out_path = input('Path to save: ')
-                    out_path = "output.wav"
+            stn_tst = get_text(text, hps_ms, cleaned=cleaned)
 
-                    with no_grad():
-                        x_tst = stn_tst.unsqueeze(0)
-                        x_tst_lengths = LongTensor([stn_tst.size(0)])
-                        sid = LongTensor([speaker_id])
-                        audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=noise_scale,
-                                               noise_scale_w=noise_scale_w, length_scale=length_scale)[0][0, 0].data.cpu().float().numpy()
+            speaker_id = get_pth_speaker_id(speakerID)
 
-                write(out_path, hps_ms.data.sampling_rate, audio)
-                print('Successfully saved!')
-                #ask_if_continue()
+            out_path = "output.wav"
+
+            with no_grad():
+                x_tst = stn_tst.unsqueeze(0)
+                x_tst_lengths = LongTensor([stn_tst.size(0)])
+                sid = LongTensor([speaker_id])
+                audio = net_g_ms.infer(x_tst, x_tst_lengths, sid=sid, noise_scale=noise_scale,
+                                        noise_scale_w=noise_scale_w, length_scale=length_scale)[0][0, 0].data.cpu().float().numpy()
+
+        write(out_path, hps_ms.data.sampling_rate, audio)
+        print('Successfully saved!')

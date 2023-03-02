@@ -33,8 +33,10 @@ def delete_msg(msg_id):
 
 def send_record_to_group(message_source, message, group_id, speakerID = 3):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
-    print(f"[ZH]{message}[ZH]")
-    generateSound(f"[ZH]{message}[ZH]","ch",speakerID)
+    if speakerID != 7:
+        message = f"[ZH]{message}[ZH]"
+    print(f"{message}")
+    generateSound(f"{message}","ch",speakerID)
     # 读取音频文件，设置采样率<default=44100>
     song = AudioSegment.from_wav(path_in).set_frame_rate(22050)
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
