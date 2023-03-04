@@ -34,7 +34,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 4. 本项目更新问题
    - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
 5. go-cqhttp登录错误, 提示重试
-   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`
+   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
 6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
    - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
 7. openai api请求提示错误, 目标计算机积极拒绝
