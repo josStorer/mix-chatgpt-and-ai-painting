@@ -31,8 +31,18 @@ user image analysis. If this project can inspire or help you, I would be honored
   找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格
 3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
    - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
-4. 其他更新问题
+4. 本项目更新问题
    - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
+5. go-cqhttp登录错误, 提示重试
+   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`
+6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
+   - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
+7. openai api请求提示错误, 目标计算机积极拒绝
+   - 在`main.py`内添加以下内容配置代理:
+   ``` python
+      proxy = {'http': "http://127.0.0.1:端口号", 'https': "http://127.0.0.1:端口号"}
+      openai.proxy = proxy
+   ```
 
 如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
