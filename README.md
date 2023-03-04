@@ -24,7 +24,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 ## 常见问题
 
 1. at机器人对话时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
-   - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理, 请在[main.py#L95](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L95)
+   - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理, 请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
   邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
 2. 画图时, 机器人提示, `错误: 'images'`, 或 `错误: 404: {"detail":"Not Found"}`
    - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包, 请找到相关启动文件(一般是.bat后缀),
