@@ -7,7 +7,7 @@ import re
 # 音频文件路径
 path_in = "output.wav"
 path_out = "output.mp3"
-
+word_before_voice = "我想说的话已经通过语音传达了喵~希望你能听见"
 
 def send_message_to_group(message_source, message, group_id):
     print(f"[Res]{message}[Res]")
@@ -42,6 +42,7 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3):
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
     fh = song.export(path_out, format='mp3', bitrate='32k')
     # sound = miraicle.Voice(base64=path_out)
+    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{word_before_voice}", group_id)
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
@@ -62,6 +63,7 @@ def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
     fh = song.export(path_out, format='mp3', bitrate='32k')
     # sound = miraicle.Voice(base64=path_out)
+    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{word_before_voice}", group_id)
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {

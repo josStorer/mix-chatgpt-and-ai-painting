@@ -38,7 +38,7 @@ def get_pth_speaker_id(speakerID):
     }[speakerID]
 
 def is_multi(speakerID):
-    return speakerID in [5,6]
+    return speakerID in [0,1,2,3,5,6]
 
 def get_lnnw(speakerID):
     if speakerID <= 3 or speakerID == 7:

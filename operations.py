@@ -125,6 +125,9 @@ def operation_help(sender, _, group_id):
 
 #默认
  - 查看画图的默认配置
+
+更多指令如下
+{both_operations.keys()}
 ''', group_id)
 
 
@@ -201,6 +204,16 @@ def operation_switch_gpt(sender, message, group_id):
         if is_remote_machine():
             at_user_in_group(sender, sender, "权限不足", group_id)
 
+def operation_switch_gpt35(sender, message, group_id):
+    if sender == master_id:
+        global_var.billing_chatgpt = not global_var.billing_chatgpt
+        print("billing_chatgpt:", global_var.billing_chatgpt)
+        if is_not_remote_machine():
+            at_user_in_group(sender, sender, "已切换至GPT3.5 Turbo" if global_var.billing_chatgpt else "已切换至ChatGPT", group_id)
+    else:
+        if is_remote_machine():
+            at_user_in_group(sender, sender, "权限不足", group_id)
+
 
 def operation_clear_chat(sender, message, group_id):
     if global_var.is_remote_machine:
@@ -241,7 +254,8 @@ def operation_switch_voice(sender, message, group_id):
 
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
-        at_user_in_group(sender, sender, "已开启语音对话", group_id)
+        at_user_in_group(sender, sender, "检测到还没有开启语音对话。已开启语音对话。\n" \
+                         "提示：语音功能一共有3个指令，#语音切换，#音色切换，#朗读+[需要朗读的文案]", group_id)
         global_var.user_needvoice[history_id] = 4
         return
 
@@ -254,8 +268,7 @@ def operation_switch_sound(sender, message, group_id):
 
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
-        at_user_in_group(sender, sender, "检测到还没有开启语音对话。已为你开启语音对话", group_id)
-        global_var.user_needvoice[history_id] = 6
+        operation_switch_voice(sender, message, group_id)
         return
 
     speaker_dict = {
@@ -278,7 +291,7 @@ def operation_voice(sender, message, group_id):
     message = message.replace("#朗读 ","")
     history_id = get_history_id(group_id, sender)
     if history_id not in global_var.user_needvoice:
-        operation_switch_sound(sender, message, group_id)
+        operation_switch_voice(sender, message, group_id)
         return
     send_record_to_group(sender, f"{message}", group_id, global_var.user_needvoice[history_id])
     return
@@ -295,6 +308,7 @@ both_operations = {
     "#vip": operation_add_vip,
     "#unvip": operation_remove_vip,
     "#gpt切换": operation_switch_gpt,
+    "#gpt35切换": operation_switch_gpt35,
     "#清理对话": operation_clear_chat,
     "#at切换": operation_switch_at,
     "#语音切换": operation_switch_voice,

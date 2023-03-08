@@ -12,6 +12,7 @@ import global_var
 from operations import *
 from utils import *
 from ws_wrapper import *
+import traceback
 
 chatbot = None
 
@@ -50,13 +51,20 @@ def get_chat_pair(group_id, sender):
     if len(global_var.chat_history[history_id]) == 0:
         return ''
     else:
-        chat_pair = ''
-        for chat in global_var.chat_history[history_id]:
-            chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
-        return chat_pair
+        if not (global_var.use_chatgpt and global_var.billing_chatgpt):
+            chat_pair = ''
+            for chat in global_var.chat_history[history_id]:
+                chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
+            return chat_pair
+        else:
+            chat_pair = []
+            for chat in global_var.chat_history[history_id]:
+                chat_pair.append({"role": "user", "content": chat['question']})
+                chat_pair.append({"role": "assistant", "content": chat['answer']})
+            return chat_pair
 
 
-def chat_handler_thread(group_id, message, sender):
+def chat_handler_thread(group_id, question, sender):
     global chatbot
 
     if not is_group_online(group_id) or not global_var.is_gpu_connected:
@@ -77,32 +85,41 @@ def chat_handler_thread(group_id, message, sender):
     if global_var.is_remote_machine:
         return
 
-    question = message.replace(f'[CQ:at,qq={bot_id}]', '')
-    chat_prompt = chat_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
     answer = ""
     if not global_var.use_chatgpt:
         try:
+            chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
             completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
                                                   timeout=api_timeout, stop=['Human:', 'AI:'])
+            answer = completion.choices[0].text
         except Exception as e:
             send_err_to_group(sender, e, group_id)
             return
-
-        answer = completion.choices[0].text
     else:
         try:
-            if not chatbot:
-                chatbot = Chatbot(config={
-                    "email": config.email,
-                    "password": config.password,
-                    "proxy": "127.0.0.1:19180"
-                })
-            chatbot.conversation_id = None
-            chatbot.parent_id = None
-            for data in chatbot.ask(chat_prompt, None, None, api_timeout):
-                answer = data["message"]
+            if not global_var.billing_chatgpt:
+                if not chatbot:
+                    chatbot = Chatbot(config={
+                        "email": config.email,
+                        "password": config.password,
+                        "proxy": "127.0.0.1:19180"
+                    })
+                chatbot.conversation_id = None
+                chatbot.parent_id = None
+                chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+                for data in chatbot.ask(chat_prompt, None, None, api_timeout):
+                    answer = data["message"]
+            else:
+                pair = get_chat_pair(group_id, sender)
+                chat_prompt = (pair if pair else [])
+                chat_prompt.insert(0, {"role": "system", "content": chatgpt_prompt_base})
+                chat_prompt.append({"role": "user", "content": question})
+                completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=chat_prompt,
+                                                          timeout=api_timeout)
+                answer = completion.choices[0].message.content
         except Exception as e:
             send_err_to_group(sender, e, group_id)
+            traceback.print_exc()
             return
 
     global_var.chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
@@ -116,6 +133,7 @@ def chat_handler_thread(group_id, message, sender):
         send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
     else:
         at_user_in_group(sender, sender, answer, group_id)
+
 
 
 def message_handler(message: str, sender, group_id):
@@ -189,7 +207,9 @@ if __name__ == "__main__":
         global_var.is_remote_machine = False
         global_var.is_gpu_connected = True
         import openai
-
+        proxies = {'http': "127.0.0.1:19180",
+        'https': "127.0.0.1:19180"}
+        openai.proxy = proxies
         openai.api_key = api_key
 
     websocket.enableTrace(False)

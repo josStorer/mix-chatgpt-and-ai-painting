@@ -23,8 +23,11 @@ def text_to_sequence_paimon(text, cleaner_names, ):
 
   clean_text = _clean_text(text, cleaner_names)
   for symbol in clean_text:
-    symbol_id = _symbol_to_id[symbol]
-    sequence += [symbol_id]
+    try:
+      symbol_id = _symbol_to_id[symbol]
+      sequence += [symbol_id]
+    except Exception as e:
+      print(f"Error Symbol :{e}")
   return sequence
 
 def text_to_sequence(text, symbols, cleaner_names):
