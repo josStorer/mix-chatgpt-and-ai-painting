@@ -61,6 +61,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 1. 先把仓库clone下来，按照上面的步骤执行
 2. 然后安装vits相关的依赖，我还没有整理好。一边运行一边安装吧
 3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到[model/chisato]目录下，能调通这个就行了
+4. proxy相关的参数，[127.0.0.1:XXXX]，后面的端口填自己本机的
 
 
 ## 指令一览
