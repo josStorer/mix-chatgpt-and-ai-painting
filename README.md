@@ -13,7 +13,8 @@ future, I may add more internationalization support. For English users, it shoul
 the help of variable names in the code. You can also translate this readme file into English to help you understand this
 project. The core idea is to use prompts to guide the insertion of identifying text for the program to recognize and
 execute instructions. Similar approaches can also be used for services such as voice services, group management, and
-user image analysis. If this project can inspire or help you, I would be honored.
+user image analysis(has been implemented by [visual-chatgpt](https://github.com/microsoft/visual-chatgpt)). If this
+project can inspire or help you, I would be honored.
 
 ## Example
 
@@ -24,21 +25,24 @@ user image analysis. If this project can inspire or help you, I would be honored
 ## 常见问题
 
 1. at机器人对话时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
-   - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理, 请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
-  邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
+    - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理,
+      请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
+      邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
 2. 画图时, 机器人提示, `错误: 'images'`, 或 `错误: 404: {"detail":"Not Found"}`
-   - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包, 请找到相关启动文件(一般是.bat后缀),
-  找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的, 请找到`启用API`/`暴露API`之类的选项勾选
+    - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包,
+      请找到相关启动文件(一般是.bat后缀),
+      找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的,
+      请找到`启用API`/`暴露API`之类的选项勾选
 3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
-   - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
+    - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
 4. 本项目更新问题
-   - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
+    - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
 5. go-cqhttp登录错误, 提示重试
-   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
+    - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
 6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
-   - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
+    - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
 7. openai api请求提示错误, 目标计算机积极拒绝
-   - 在`main.py`内添加以下内容配置代理:
+    - 在`main.py`内添加以下内容配置代理:
    ``` python
       proxy = {'http': "http://127.0.0.1:端口号", 'https': "http://127.0.0.1:端口号"}
       openai.proxy = proxy
@@ -48,17 +52,22 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 ## 食用方法
 
-1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开, windows一般使用windows_amd64.exe
+1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开,
+   windows一般使用windows_amd64.exe
 2. 启动cmd窗口, 打开到go-cqhttp所在路径, 然后通过命令行输入程序名启动, 并选择正向websocket模式
 3. 扫码登录你的qq机器人
-4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装依赖, 该项目也提供了不同系统的一键安装脚本,
-   如果你是从源代码安装, 可参考https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running, 如果你下载的是他人的整合包, 可略过
+4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装依赖,
+   该项目也提供了不同系统的一键安装脚本,
+   如果你是从源代码安装, 可参考https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running,
+   如果你下载的是他人的整合包, 可略过
 5. 从huggingface下载模型权重,
    如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models/Stable-diffusion`目录下
-6. 启动stable-diffusion-webui, 可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
+6. 启动stable-diffusion-webui,
+   可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
    也可参考[sd_webui.bat](sd_webui.bat), 如果所有依赖安装正常, 可以直接用webui.py启动, 如
-   `python webui.py --medvram --deepdanbooru --xformers --api`, 注意必须带有`--api`参数, 如果你使用的是他人的整合包, 可能需要自己手动在启动脚本加上`--api`参数, 参考上面的`常见问题`一栏
+   `python webui.py --medvram --deepdanbooru --xformers --api`, 注意必须带有`--api`参数, 如果你使用的是他人的整合包,
+   可能需要自己手动在启动脚本加上`--api`参数, 参考上面的`常见问题`一栏
 7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
 8. 在本项目的[config.py](config.py)内修改属于你自己的配置,
@@ -75,25 +84,25 @@ user image analysis. If this project can inspire or help you, I would be honored
 - 直接at机器人, 即可调用openai api进行对话, 在config.py内配置auth_vip_for_all=True授予所有人权限, 否则请使用vip指令授权指定qq号
 - 通过at机器人+警号指令, 可操作指定机器人, 例如`@机器人1号 #上线`, 适用于群内有多个机器人的情况, 而直接使用警号指令则作用于所有机器人
 
-| 指令      | 示例                      | 说明                                                                                                                                                                                                                                     |
-| --------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| #gpt切换  | #gpt切换                  | 在gpt3与chatgpt模式间切换                                                                                                                                                                                                                |
-| #上线     | #上线                     | 令该群聊的机器人上线, 使其允许执行openai调用和ai绘画                                                                                                                                                                                     |
-| #下线     | #下线                     | 令该群聊的机器人下线, 使其不允许执行openai调用和ai绘画                                                                                                                                                                                   |
-| #画图     | #画图 512x512.girl        | 令机器人在该群聊中画图, 例如: `#画图 girl`, 使用点或分号分隔, 允许一些快捷操作, 使用花括号允许传入细致的json配置操作, 详细请使用 `#帮助` 查看                                                                                            |
-| #d        | #d 512x512.girl           | vip列表内的用户允许使用的快捷画图操作, 效果同 `#画图`                                                                                                                                                                                    |
-| #撤回     | #撤回                     | 撤回由你触发的上一条机器人消息                                                                                                                                                                                                           |
-| #拉黑     | #拉黑 123456              | 禁止该用户在该群聊中使用机器人                                                                                                                                                                                                           |
-| #解除     | #解除 123456              | 解除对该用户的拉黑                                                                                                                                                                                                                       |
-| #vip      | #vip 123456               | 将该用户加入vip列表, vip列表内的用户可以使用 `#d` 指令, 也可以通过at调用机器人, 执行openai api对话                                                                                                                                       |
-| #unvip    | #unvip 123456             | 将该用户从vip列表中移除                                                                                                                                                                                                                  |
-| #清理对话 | #清理对话                 | 清理对话上下文(先前对话内容过长导致请求失败时, 可以选择清理)                                                                                                                                                                             |
-| #帮助     | #帮助                     | 显示面向群内普通用户的帮助信息, 不含vip指令和master指令                                                                                                                                                                                  |
-| #默认     | #默认                     | 显示 `#画图` 的默认json配置, 你可以直接复制这些信息自己修改, 然后再通过 `#画图 {...}` 传回去调用                                                                                                                                         |
-| #黑名单   | #黑名单                   | 显示黑名单列表                                                                                                                                                                                                                           |
-| #at切换   | #at切换                   | 切换机器人响应模式, 默认总是需要at机器人以进行openai回复, 切换后可以直接对话, 对每句话都进行回复                                                                                                                                         |
-| #model    | #model anything-v4        | 直接输入`#model`查看当前激活模型及所有可用模型列表, 输入`#model 模型名`进行模型切换, 模型名不需要完整, 只需要存在于目标模型名中即可, 不区分大小写, 例如, 完整的模型名为`anything-v4.0-pruned.safetensors`, 可直接输入`#model v4`进行切换 |
-| #vae      | #vae Anything-V3.0.vae.pt | 直接输入`#vae`查看当前使用的VAE, 输入`#vae VAE名称`进行VAE切换, 注意与模型切换不同, VAE切换必须完全匹配文件名称                                                                                                                          |
+| 指令     | 示例                        | 说明                                                                                                                                                         |
+|--------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| #gpt切换 | #gpt切换                    | 在gpt3与chatgpt模式间切换                                                                                                                                         |
+| #上线    | #上线                       | 令该群聊的机器人上线, 使其允许执行openai调用和ai绘画                                                                                                                            |
+| #下线    | #下线                       | 令该群聊的机器人下线, 使其不允许执行openai调用和ai绘画                                                                                                                           |
+| #画图    | #画图 512x512.girl          | 令机器人在该群聊中画图, 例如: `#画图 girl`, 使用点或分号分隔, 允许一些快捷操作, 使用花括号允许传入细致的json配置操作, 详细请使用 `#帮助` 查看                                                                      |
+| #d     | #d 512x512.girl           | vip列表内的用户允许使用的快捷画图操作, 效果同 `#画图`                                                                                                                            |
+| #撤回    | #撤回                       | 撤回由你触发的上一条机器人消息                                                                                                                                            |
+| #拉黑    | #拉黑 123456                | 禁止该用户在该群聊中使用机器人                                                                                                                                            |
+| #解除    | #解除 123456                | 解除对该用户的拉黑                                                                                                                                                  |
+| #vip   | #vip 123456               | 将该用户加入vip列表, vip列表内的用户可以使用 `#d` 指令, 也可以通过at调用机器人, 执行openai api对话                                                                                           |
+| #unvip | #unvip 123456             | 将该用户从vip列表中移除                                                                                                                                              |
+| #清理对话  | #清理对话                     | 清理对话上下文(先前对话内容过长导致请求失败时, 可以选择清理)                                                                                                                           |
+| #帮助    | #帮助                       | 显示面向群内普通用户的帮助信息, 不含vip指令和master指令                                                                                                                          |
+| #默认    | #默认                       | 显示 `#画图` 的默认json配置, 你可以直接复制这些信息自己修改, 然后再通过 `#画图 {...}` 传回去调用                                                                                               |
+| #黑名单   | #黑名单                      | 显示黑名单列表                                                                                                                                                    |
+| #at切换  | #at切换                     | 切换机器人响应模式, 默认总是需要at机器人以进行openai回复, 切换后可以直接对话, 对每句话都进行回复                                                                                                    |
+| #model | #model anything-v4        | 直接输入`#model`查看当前激活模型及所有可用模型列表, 输入`#model 模型名`进行模型切换, 模型名不需要完整, 只需要存在于目标模型名中即可, 不区分大小写, 例如, 完整的模型名为`anything-v4.0-pruned.safetensors`, 可直接输入`#model v4`进行切换 |
+| #vae   | #vae Anything-V3.0.vae.pt | 直接输入`#vae`查看当前使用的VAE, 输入`#vae VAE名称`进行VAE切换, 注意与模型切换不同, VAE切换必须完全匹配文件名称                                                                                    |
 
 ## 文件功能说明
 
