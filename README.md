@@ -1,4 +1,4 @@
-# Mix-ChatGPT-And-AI-Painting
+# Mix-ChatGPT-And-AI-Painting-And-Vits
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/LICENSE)
 [![qq](https://img.shields.io/badge/qq%E7%BE%A4-283430436-brightgreen.svg)](https://jq.qq.com/?_wv=1027&k=HwlnMCMr)
@@ -55,6 +55,13 @@ user image analysis. If this project can inspire or help you, I would be honored
     之后自己`win+tab`新建一个桌面干别的事情,
     让你的电脑闲置时给群友玩耍吧
 11. 更多详细配置, 及服务器24小时在线模式, 查看[config.py](config.py)
+
+## Vits语音版额外内容
+
+1. 先把仓库clone下来，按照上面的步骤执行
+2. 然后安装vits相关的依赖，我还没有整理好。一边运行一边安装吧
+3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/tree/main/pretrained_models/chisato) ，并放到[model/chisato]目录下，能调通这个就行了
+
 
 ## 指令一览
 
