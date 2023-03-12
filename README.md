@@ -30,6 +30,13 @@ user image analysis. If this project can inspire or help you, I would be honored
   - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包, 请找到相关启动文件(一般是.bat后缀),
   找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格
 
+3. 如果出现了SSL Error，解决方案是卸载urllib3然后重装至1.25.11版本再重新运行一遍就可以。
+  - 在终端或命令提示符中卸载urllib3
+  pip uninstall urllib3
+
+  - 然后，您可以通过使用指定版本号的pip install命令来安装所需的版本：
+  pip install urllib3==1.25.11
+
 如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
 ## 食用方法
@@ -59,7 +66,17 @@ user image analysis. If this project can inspire or help you, I would be honored
 ## Vits语音版额外内容
 
 1. 先把仓库clone下来，按照上面的步骤执行
-2. 然后安装vits相关的依赖，我还没有整理好。一边运行一边安装吧
+2. 然后安装vits相关的依赖。
+[pydub依赖]
+[scipy依赖]
+[torch依赖]
+[librosa依赖]
+[proxies依赖]
+[pypinyin依赖]
+[jieba依赖]
+[unidecode依赖]
+[openjtalk依赖]
+[FFmpeg依赖](https://github.com/BtbN/FFmpeg-Builds/releases/?spm=a2c6h.12873639.article-detail.4.55e41da65yk2qS)下载好之后添加[ffmpeg-master-latest-win64-gpl\bin]到系统路径[%PATH%]中
 3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到[model/chisato]目录下，能调通这个就行了
 4. proxy相关的参数，[127.0.0.1:XXXX]，后面的端口填自己本机的
 

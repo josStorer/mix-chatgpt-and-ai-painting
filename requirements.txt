@@ -2,3 +2,12 @@ openai
 requests
 websocket-client
 revChatGPT
+pydub
+scipy
+torch
+librosa
+proxies
+pypinyin
+jieba
+unidecode
+openjtalk
