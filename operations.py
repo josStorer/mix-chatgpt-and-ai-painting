@@ -360,6 +360,47 @@ def operation_switch_vae(sender, message, group_id):
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
+    
+def operation_switch_lora(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    if sender != master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#lora", "")
+    new_message = new_message.strip()
+
+    response = requests.get(f"{gpu_url}/file=lora_list.txt")
+
+    if response.status_code == 200:
+        models = response.content.decode("utf-8").replace('\n','').split('\r')
+    else:
+        at_user_in_group(sender, sender, "获取模型列表失败", group_id)
+        return
+
+    try:
+        options = requests.get(f"{gpu_url}/sdapi/v1/options").json()
+        at_user_in_group(
+            sender, sender, f"当前可用Lora:\n" + "\n".join(models), group_id)
+
+        return
+        if new_message == "":
+            at_user_in_group(
+                sender, sender, f"当前激活Lora:\n{options['sd_model_checkpoint']}\n\n当前可用Lora:\n" + "\n".join(models), group_id)
+        else:
+            for model_title in models:
+                if new_message.lower() in model_title.lower():
+                    options['sd_model_checkpoint'] = model_title
+                    requests.post(f"{gpu_url}/sdapi/v1/options", json=options)
+                    at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id)
+                    return
+            at_user_in_group(sender, sender, "未找到匹配的模型", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+
 
 
 both_operations = {
@@ -380,7 +421,8 @@ both_operations = {
     "#音色切换": operation_switch_sound,
     "#朗读": operation_voice,
     "#model": operation_switch_model,
-    "#vae": operation_switch_vae
+    "#vae": operation_switch_vae,
+    '#lora': operation_switch_lora
  }
 
 remote_operations = {
