@@ -129,8 +129,8 @@ def chat_handler_thread(group_id, question, sender):
     if match:
         at_user_in_group(sender, sender, re.sub(pattern, '', answer), group_id)
         extracted_text = match.group(1)
-        # global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
-        send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
+        global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
+        # send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
     else:
         at_user_in_group(sender, sender, answer, group_id)
 

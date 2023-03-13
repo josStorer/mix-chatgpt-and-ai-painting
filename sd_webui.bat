@@ -1,3 +1,4 @@
-e:
-cd "E:\Programs\stable-diffusion-webui"
+d:
+cd "D:\BaiduNetdiskDownload\Plugins\AI-Draw\qiuyeaaaki"
 python webui.py --medvram --deepdanbooru --xformers --api
+pause
