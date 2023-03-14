@@ -66,7 +66,7 @@ def get_chat_pair(group_id, sender):
 def chat_handler_thread(group_id, question, sender):
     global chatbot
 
-    if not is_group_online(group_id) or not global_var.is_gpu_connected:
+    if not is_group_online(group_id) or (gpu_disconnect_notify and not global_var.is_gpu_connected):
         if is_remote_machine():
             at_user_in_group(sender, sender, "喵喵不在线哦~", group_id)
         return
