@@ -25,7 +25,10 @@ def image_message_handler_thread():
             if is_not_remote_machine():
                 if is_group_online(group_id):
                     try:
-                        image, seed, prompt = gen_image(sender, gen_message, group_id)
+                        if "bImg2img" in gen_message:
+                            image, seed, prompt = gen_img2img(sender, gen_message, group_id)
+                        else:
+                            image, seed, prompt = gen_image(sender, gen_message, group_id)
                         if show_prompt:
                             at_user_in_group(sender, sender,
                                              f"prompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
@@ -34,6 +37,7 @@ def image_message_handler_thread():
                             at_user_in_group(sender, sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id)
                     except Exception as e:
                         send_err_to_group(sender, e, group_id)
+                        traceback.print_exc()
             else:
                 if not is_group_online(group_id):
                     at_user_in_group(sender, sender, "该群聊响应未上线", group_id)
@@ -67,7 +71,7 @@ def get_chat_pair(group_id, sender):
 def chat_handler_thread(group_id, question, sender):
     global chatbot
 
-    if not is_group_online(group_id) or not global_var.is_gpu_connected:
+    if not is_group_online(group_id) or (gpu_disconnect_notify and not global_var.is_gpu_connected):
         if is_remote_machine():
             at_user_in_group(sender, sender, "喵喵不在线哦~", group_id)
         return
@@ -84,6 +88,17 @@ def chat_handler_thread(group_id, question, sender):
 
     if global_var.is_remote_machine:
         return
+    
+    #图生图接入 start
+    pattern = r"\[CQ:image,file\=(.*?)*url\=(.*?)\]"
+    match = re.search(pattern, question)
+    if match:
+        url = match.group(2)
+        print (f"get user_url : {url}")
+        global_var.image_gen_messages.append(({"bImg2img":True,"img_urls": [url,]}, sender, group_id, True))
+        at_user_in_group(sender, sender, "收到图片了喵~正在载入图片", group_id)
+        return
+    ##图生图接入 end
 
     answer = ""
     if not global_var.use_chatgpt:

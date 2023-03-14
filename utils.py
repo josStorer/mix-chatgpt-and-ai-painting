@@ -1,6 +1,8 @@
 from threading import Timer
 
 import requests
+import io
+from PIL import Image
 
 from config import *
 from ws_wrapper import *
@@ -51,6 +53,43 @@ def gen_image(sender, gen_message, group_id):
         raise Exception(gpu_disconnected_msg)
 
     r = response.json()
+
+    image = r['images'][0].split(",", 1)[0]
+    image_info = json.loads(r["info"])
+    return image, image_info["seed"], real_payload["prompt"]
+
+def b64_img(image: Image):
+    buffered = io.BytesIO()
+    image.save(buffered, format="PNG")
+    img_base64 = 'data:image/png;base64,' + str(base64.b64encode(buffered.getvalue()), 'utf-8')
+    return img_base64
+
+
+def gen_img2img(sender, gen_message, group_id):
+    real_payload = gen_param.copy()
+    init_images = []
+    for img_url in gen_message["img_urls"]:
+        try:
+            print (f"img_url : {img_url}")
+            response = requests.get(url=f'{img_url}')
+            img = Image.open(io.BytesIO(response.content)) # .convert("RGB")
+            init_images.append(b64_img(img))
+        except Exception as e:
+            raise e
+    # real_payload.update(gen_message)
+    real_payload["init_images"] = init_images
+    if real_payload["steps"] > max_step:
+        real_payload["steps"] = max_step
+        at_user_in_group(sender, sender, f"最大steps被限制为{max_step}, 现以{max_step}开始生成", group_id)
+    try:
+        # print (f"real_payload : {real_payload}")
+        response = requests.post(url=f'{gpu_url}{gpu_api_img}', json=real_payload)
+    except Exception as e:
+        if "Connection refused" in str(e):
+            raise Exception(gpu_disconnected_msg)
+        raise e
+    r = response.json()
+    print (f"get img from api {r}")
 
     image = r['images'][0].split(",", 1)[0]
     image_info = json.loads(r["info"])
