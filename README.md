@@ -103,6 +103,7 @@ project can inspire or help you, I would be honored.
 | #at切换  | #at切换                     | 切换机器人响应模式, 默认总是需要at机器人以进行openai回复, 切换后可以直接对话, 对每句话都进行回复                                                                                                    |
 | #model | #model anything-v4        | 直接输入`#model`查看当前激活模型及所有可用模型列表, 输入`#model 模型名`进行模型切换, 模型名不需要完整, 只需要存在于目标模型名中即可, 不区分大小写, 例如, 完整的模型名为`anything-v4.0-pruned.safetensors`, 可直接输入`#model v4`进行切换 |
 | #vae   | #vae Anything-V3.0.vae.pt | 直接输入`#vae`查看当前使用的VAE, 输入`#vae VAE名称`进行VAE切换, 注意与模型切换不同, VAE切换必须完全匹配文件名称                                                                                    |
+| #余额    | #余额                       | 显示当前所用api key的余额                                                                                                                                           |
 
 ## 文件功能说明
 

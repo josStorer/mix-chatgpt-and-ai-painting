@@ -258,7 +258,8 @@ def operation_switch_model(sender, message, group_id):
         options = requests.get(f"{gpu_url}/sdapi/v1/options").json()
         if new_message == "":
             at_user_in_group(
-                sender, sender, f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id)
+                sender, sender,
+                f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id)
         else:
             for model_title in models:
                 if new_message.lower() in model_title.lower():
@@ -292,10 +293,27 @@ def operation_switch_vae(sender, message, group_id):
             options['sd_vae'] = new_message
             requests.post(f"{gpu_url}/sdapi/v1/options", json=options)
             at_user_in_group(
-                sender, sender, f"已尝试切换VAE, 注意VAE切换必须准确匹配名称\n如果出现效果异常, 可能是切换错误\n可切换回先前的VAE:\n{old_vae}", group_id)
+                sender, sender,
+                f"已尝试切换VAE, 注意VAE切换必须准确匹配名称\n如果出现效果异常, 可能是切换错误\n可切换回先前的VAE:\n{old_vae}",
+                group_id)
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
+
+
+def operation_show_balance(sender, _, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    response = requests.get("https://api.openai.com/dashboard/billing/credit_grants", headers={
+        "Content-Type": 'application/json',
+        "Authorization": f"Bearer {api_key}",
+    })
+
+    if response.status_code == 200:
+        at_user_in_group(sender, sender, response.text, group_id)
+    else:
+        at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
 
 
 both_operations = {
@@ -312,7 +330,8 @@ both_operations = {
     "#清理对话": operation_clear_chat,
     "#at切换": operation_switch_at_mode,
     "#model": operation_switch_model,
-    "#vae": operation_switch_vae
+    "#vae": operation_switch_vae,
+    "#余额": operation_show_balance,
 }
 
 remote_operations = {
