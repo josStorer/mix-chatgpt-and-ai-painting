@@ -401,7 +401,19 @@ def operation_switch_lora(sender, message, group_id):
         send_err_to_group(sender, e, group_id)
         return
 
+def operation_show_balance(sender, _, group_id):
+    if global_var.is_remote_machine:
+        return
 
+    response = requests.get("https://api.openai.com/dashboard/billing/credit_grants", headers={
+        "Content-Type": 'application/json',
+        "Authorization": f"Bearer {api_key}",
+    })
+
+    if response.status_code == 200:
+        at_user_in_group(sender, sender, response.text, group_id)
+    else:
+        at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
 
 both_operations = {
     "#上线": operation_set_online,
@@ -422,7 +434,8 @@ both_operations = {
     "#朗读": operation_voice,
     "#model": operation_switch_model,
     "#vae": operation_switch_vae,
-    '#lora': operation_switch_lora
+    '#lora': operation_switch_lora,
+    "#余额": operation_show_balance
  }
 
 remote_operations = {
