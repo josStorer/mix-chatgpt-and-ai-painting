@@ -68,16 +68,26 @@ def b64_img(image: Image):
 def gen_img2img(sender, gen_message, group_id):
     real_payload = gen_param.copy()
     init_images = []
+    width, height = None,None
     for img_url in gen_message["img_urls"]:
         try:
             print (f"img_url : {img_url}")
             response = requests.get(url=f'{img_url}')
             img = Image.open(io.BytesIO(response.content)) # .convert("RGB")
+            width, height = img.width, img.height
             init_images.append(b64_img(img))
         except Exception as e:
             raise e
     # real_payload.update(gen_message)
     real_payload["init_images"] = init_images
+    # 对超过1024像素的进行等比例缩放
+    import math
+    max_axis = max(width,height)
+    if max_axis > 1024:
+        width = math.floor(1024.0 / max_axis * width)
+        height = math.floor(1024.0 / max_axis * height)
+    real_payload["width"] = width
+    real_payload["height"] = height
     if real_payload["steps"] > max_step:
         real_payload["steps"] = max_step
         at_user_in_group(sender, sender, f"最大steps被限制为{max_step}, 现以{max_step}开始生成", group_id)
