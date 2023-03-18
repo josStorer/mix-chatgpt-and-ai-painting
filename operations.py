@@ -423,15 +423,15 @@ def operation_set_gpt(sender, message, group_id):
 
     new_message = message.replace("#gptset", "")
     new_message = new_message.strip()
-    new_pair = new_message.split(":")
-    if new_pair[-1] != "str":
-        new_pair[1] = eval(new_pair)
 
     try:
         if new_message == "":
             at_user_in_group(
                 sender, sender, f"当前参数:\n{global_var.admin_setGPT}", group_id)
         else:
+            new_pair = new_message.split(":")
+            if new_pair[-1] != "str":
+                new_pair[1] = eval(new_pair)
             global_var.admin_setGPT[new_pair[0]] = new_pair[1]
             at_user_in_group(
                 sender, sender, f"修改后的参数:\n{global_var.admin_setGPT}", group_id)
