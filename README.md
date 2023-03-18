@@ -76,6 +76,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 [jieba依赖]
 [unidecode依赖]
 [openjtalk依赖]
+[cn2an依赖]
 [FFmpeg依赖](https://github.com/BtbN/FFmpeg-Builds/releases/?spm=a2c6h.12873639.article-detail.4.55e41da65yk2qS)下载好之后添加[ffmpeg-master-latest-win64-gpl\bin]到系统路径[%PATH%]中
 3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到[model/chisato]目录下，能调通这个就行了
 4. proxy相关的参数，[127.0.0.1:XXXX]，后面的端口填自己本机的

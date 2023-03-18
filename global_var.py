@@ -4,7 +4,8 @@ from utils import ResettableTimer
 
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
-    is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, chat_history, user_needat, user_needvoice
+    is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, \
+    chat_history, user_needat, user_needvoice, admin_setGPT
     last_msg_id_of_user = {}
     image_gen_messages = []
     is_remote_machine = False
@@ -17,6 +18,7 @@ def init():
 
     user_needat = {}
     user_needvoice = {}
+    admin_setGPT = {"model":"gpt-3.5-turbo"}
 
     ws = None
 

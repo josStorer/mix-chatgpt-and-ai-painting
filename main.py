@@ -129,8 +129,10 @@ def chat_handler_thread(group_id, question, sender):
                 chat_prompt = (pair if pair else [])
                 chat_prompt.insert(0, {"role": "system", "content": chatgpt_prompt_base})
                 chat_prompt.append({"role": "user", "content": question})
-                completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=chat_prompt,
-                                                          timeout=api_timeout)
+                # model="gpt-3.5-turbo"
+                completion = openai.ChatCompletion.create(messages=chat_prompt,
+                                                          timeout=api_timeout, 
+                                                          **(global_var.admin_setGPT))
                 answer = completion.choices[0].message.content
         except Exception as e:
             send_err_to_group(sender, e, group_id)

@@ -11,3 +11,4 @@ pypinyin
 jieba
 unidecode
 openjtalk
+cn2an

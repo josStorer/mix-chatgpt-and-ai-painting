@@ -415,6 +415,31 @@ def operation_show_balance(sender, _, group_id):
     else:
         at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
 
+
+def operation_set_gpt(sender, message, group_id):
+    if sender != master_id and sender not in auth_set_gpt :
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#gptset", "")
+    new_message = new_message.strip()
+    new_pair = new_message.split(":")
+    if new_pair[-1] != "str":
+        new_pair[1] = eval(new_pair)
+
+    try:
+        if new_message == "":
+            at_user_in_group(
+                sender, sender, f"当前参数:\n{global_var.admin_setGPT}", group_id)
+        else:
+            global_var.admin_setGPT[new_pair[0]] = new_pair[1]
+            at_user_in_group(
+                sender, sender, f"修改后的参数:\n{global_var.admin_setGPT}", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -435,7 +460,8 @@ both_operations = {
     "#model": operation_switch_model,
     "#vae": operation_switch_vae,
     '#lora': operation_switch_lora,
-    "#余额": operation_show_balance
+    "#余额": operation_show_balance,
+    "#gptset": operation_set_gpt
  }
 
 remote_operations = {
