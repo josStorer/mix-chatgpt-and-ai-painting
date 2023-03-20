@@ -469,7 +469,9 @@ def operation_add_chat_prompt_model(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
-    new_message = message.replace(chat_prompt_model_msg, "")
+    for replace_msg in [add_chat_prompt_model_msg,add_chat_prompt_model_msg2,add_chat_prompt_model_msg3,add_chat_prompt_model_msg4]:
+        new_message = message.replace(replace_msg, "")
+    new_message = new_message.strip()
     new_message = new_message.split(" ",1)
     if len(new_message) < 2:
         at_user_in_group(sender, sender, "正确的格式是：[人设名称]空格[人设内容]", group_id)
@@ -508,6 +510,9 @@ both_operations = {
     "#gptset": operation_set_gpt,
     chat_prompt_model_msg: operation_chat_prompt_model,
     add_chat_prompt_model_msg: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg2: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg3: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg4: operation_add_chat_prompt_model,
  }
 
 remote_operations = {
