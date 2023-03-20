@@ -134,7 +134,7 @@ def chat_handler_thread(group_id, question, sender):
                 pair = get_chat_pair(group_id, sender)
                 chat_prompt = (pair if pair else [])
                 chat_prompt.insert(0, {"role": "system", 
-                    "content": multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model]})
+                    "content": global_var.cur_multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model]})
                 chat_prompt.append({"role": "user", "content": question})
                 completion = openai.ChatCompletion.create(messages=chat_prompt,
                                                           timeout=api_timeout, 

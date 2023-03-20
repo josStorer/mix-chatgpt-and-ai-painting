@@ -223,7 +223,7 @@ def operation_clear_chat(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.get_user_cache(history_id):
+    if len(global_var.get_user_cache(history_id).chat_history) == 0:
         at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
         return
 
@@ -449,17 +449,37 @@ def operation_chat_prompt_model(sender, message, group_id):
     new_message = new_message.strip()
 
     try:
+        history_id = get_history_id(group_id, sender)
         if new_message == "":
             at_user_in_group(
-                sender, sender, f"当前激活模型:\n{global_var.get_user_cache(history_id).chat_prompt_model}\n\n当前可用模型:\n" + "\n".join(multi_chatgpt_prompt_base), group_id)
+                sender, sender, f"当前激活模型:\n{global_var.get_user_cache(history_id).chat_prompt_model}\n\n当前可用模型:\n" + "\n".join(global_var.cur_multi_chatgpt_prompt_base), group_id)
         else:
-            for model_title in multi_chatgpt_prompt_base:
+            for model_title in global_var.cur_multi_chatgpt_prompt_base:
                 if new_message.lower() in model_title.lower():
-                    history_id = get_history_id(group_id, sender)
                     global_var.get_user_cache(history_id).chat_prompt_model = model_title
                     at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id)
+                    operation_clear_chat(sender, message, group_id)
                     return
             at_user_in_group(sender, sender, "未找到匹配的模型", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+
+def operation_add_chat_prompt_model(sender, message, group_id):
+    if global_var.is_remote_machine:
+        return
+
+    new_message = message.replace(chat_prompt_model_msg, "")
+    new_message = new_message.split(" ",1)
+    if len(new_message) < 2:
+        at_user_in_group(sender, sender, "正确的格式是：[人设名称]空格[人设内容]", group_id)
+        return
+    model_name = new_message[0]
+    new_message = new_message[1].strip()
+
+    try:
+        global_var.cur_multi_chatgpt_prompt_base[model_name] = new_message
+        at_user_in_group(sender, sender, f"已添加新的人设【{model_name}】", group_id)
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
@@ -486,7 +506,8 @@ both_operations = {
     '#lora': operation_switch_lora,
     "#余额": operation_show_balance,
     "#gptset": operation_set_gpt,
-    chat_prompt_model_msg: operation_chat_prompt_model
+    chat_prompt_model_msg: operation_chat_prompt_model,
+    add_chat_prompt_model_msg: operation_add_chat_prompt_model,
  }
 
 remote_operations = {
