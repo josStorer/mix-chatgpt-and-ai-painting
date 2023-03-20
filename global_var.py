@@ -1,11 +1,19 @@
 import config
 from utils import ResettableTimer
 
+class user_cache_data:
+    def __init__(self) -> None:
+        self.b_need_at = False
+
+def get_user_cache(history_id):
+    if history_id not in user_cache:
+        user_cache[history_id] = user_cache_data()
+    return user_cache[history_id]
 
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
     is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, \
-    chat_history, user_needat, user_needvoice, admin_setGPT
+    chat_history, user_needvoice, admin_setGPT, user_cache
     last_msg_id_of_user = {}
     image_gen_messages = []
     is_remote_machine = False
@@ -16,7 +24,8 @@ def init():
     billing_chatgpt = config.billing_chatgpt
     chat_history = {}
 
-    user_needat = {}
+    #缓存所有用户的数据
+    user_cache = {}
     user_needvoice = {}
     admin_setGPT = {"model":"gpt-3.5-turbo"}
 

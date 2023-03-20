@@ -127,9 +127,12 @@ def chat_handler_thread(group_id, question, sender):
             else:
                 pair = get_chat_pair(group_id, sender)
                 chat_prompt = (pair if pair else [])
-                chat_prompt.insert(0, {"role": "system", "content": chatgpt_prompt_base})
+                chat_prompt.insert(0, {"role": "system", "content": multi_chatgpt_prompt_base})
                 chat_prompt.append({"role": "user", "content": question})
-                # model="gpt-3.5-turbo"
+                if not global_var.admin_setGPT['model'] == "gpt-3.5-turbo":
+                    completion = openai.Completion.create(engine=global_var.admin_setGPT['model'], prompt=chat_prompt, max_tokens=500,
+                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
+                    return
                 completion = openai.ChatCompletion.create(messages=chat_prompt,
                                                           timeout=api_timeout, 
                                                           **(global_var.admin_setGPT))
@@ -173,7 +176,7 @@ def message_handler(message: str, sender, group_id):
         message = message.strip()
         if not message.startswith('#'):
             threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
-    elif not message.startswith('#') and get_history_id(group_id, sender) in global_var.user_needat:
+    elif not message.startswith('#') and global_var.get_user_cache(get_history_id(group_id, sender)).b_need_at:
         threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
 
     if message.startswith('#'):

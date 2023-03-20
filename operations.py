@@ -243,12 +243,13 @@ def operation_switch_at(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.user_needat:
-        global_var.user_needat[history_id] = True
+    user_cache = global_var.get_user_cache(get_history_id(group_id, sender))
+    if not user_cache.b_need_at:
+        user_cache.b_need_at = True
         at_user_in_group(sender, sender, "已无需at即可对话", group_id)
         return
 
-    del global_var.user_needat[history_id]
+    user_cache.b_need_at = False
     at_user_in_group(sender, sender, "恢复到需要at再进行对话", group_id)
 
 def operation_switch_voice(sender, message, group_id):
@@ -439,6 +440,33 @@ def operation_set_gpt(sender, message, group_id):
         send_err_to_group(sender, e, group_id)
         return
 
+def operation_show_gpt_model(sender, message, group_id):
+    return
+    if global_var.is_remote_machine:
+        return
+
+    if sender != master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#model", "")
+    new_message = new_message.strip()
+
+    response = requests.get(f"{gpu_url}/sdapi/v1/sd-models")
+
+    if response.status_code == 200:
+        models = [model["title"] for model in response.json()]
+    else:
+        at_user_in_group(sender, sender, "获取模型列表失败", group_id)
+        return
+
+    try:
+        options = requests.get(f"https://api.openai.com/v1/models").json()
+        at_user_in_group(
+            sender, sender, f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
 
 both_operations = {
     "#上线": operation_set_online,
@@ -461,7 +489,8 @@ both_operations = {
     "#vae": operation_switch_vae,
     '#lora': operation_switch_lora,
     "#余额": operation_show_balance,
-    "#gptset": operation_set_gpt
+    "#gptset": operation_set_gpt,
+    "#gptmodel": operation_show_gpt_model
  }
 
 remote_operations = {
