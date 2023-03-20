@@ -469,8 +469,9 @@ def operation_add_chat_prompt_model(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
+    new_message = message
     for replace_msg in [add_chat_prompt_model_msg,add_chat_prompt_model_msg2,add_chat_prompt_model_msg3,add_chat_prompt_model_msg4]:
-        new_message = message.replace(replace_msg, "")
+        new_message = new_message.replace(replace_msg, "")
     new_message = new_message.strip()
     new_message = new_message.split(" ",1)
     if len(new_message) < 2:
