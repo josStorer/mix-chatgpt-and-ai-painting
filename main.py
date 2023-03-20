@@ -97,6 +97,15 @@ def chat_handler_thread(group_id, question, sender):
     ##图生图接入 end
 
     answer = ""
+    if not global_var.admin_setGPT['model'] == "gpt-3.5-turbo":
+        try:
+            chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+            completion = openai.Completion.create(engine=global_var.admin_setGPT['model'], prompt=chat_prompt, max_tokens=500,
+                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
+            answer = completion.choices[0].text
+        except Exception as e:
+            send_err_to_group(sender, e, group_id)
+            return
     if not global_var.use_chatgpt:
         try:
             chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
@@ -121,14 +130,11 @@ def chat_handler_thread(group_id, question, sender):
                 for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                     answer = data["message"]
             else:
+                # gpt3.5 turbo
                 pair = get_chat_pair(group_id, sender)
                 chat_prompt = (pair if pair else [])
                 chat_prompt.insert(0, {"role": "system", "content": multi_chatgpt_prompt_base})
                 chat_prompt.append({"role": "user", "content": question})
-                if not global_var.admin_setGPT['model'] == "gpt-3.5-turbo":
-                    completion = openai.Completion.create(engine=global_var.admin_setGPT['model'], prompt=chat_prompt, max_tokens=500,
-                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
-                    return
                 completion = openai.ChatCompletion.create(messages=chat_prompt,
                                                           timeout=api_timeout, 
                                                           **(global_var.admin_setGPT))
