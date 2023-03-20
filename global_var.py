@@ -7,6 +7,7 @@ class user_cache_data:
         self.b_need_at = False
         self.needvoice = None
         self.chat_history = collections.deque(maxlen=config.context_length)
+        self.chat_prompt_model = 'default'
 
 def get_user_cache(history_id):
     if history_id not in user_cache:

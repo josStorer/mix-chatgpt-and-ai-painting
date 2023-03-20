@@ -106,7 +106,7 @@ def chat_handler_thread(group_id, question, sender):
         except Exception as e:
             send_err_to_group(sender, e, group_id)
             return
-    if not global_var.use_chatgpt:
+    elif not global_var.use_chatgpt:
         try:
             chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
             completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
@@ -133,7 +133,8 @@ def chat_handler_thread(group_id, question, sender):
                 # gpt3.5 turbo
                 pair = get_chat_pair(group_id, sender)
                 chat_prompt = (pair if pair else [])
-                chat_prompt.insert(0, {"role": "system", "content": multi_chatgpt_prompt_base})
+                chat_prompt.insert(0, {"role": "system", 
+                    "content": multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model]})
                 chat_prompt.append({"role": "user", "content": question})
                 completion = openai.ChatCompletion.create(messages=chat_prompt,
                                                           timeout=api_timeout, 
