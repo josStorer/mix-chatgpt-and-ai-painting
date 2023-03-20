@@ -257,13 +257,13 @@ def operation_switch_voice(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.user_needvoice:
+    if not global_var.get_user_cache(history_id).needvoice:
         at_user_in_group(sender, sender, "检测到还没有开启语音对话。已开启语音对话。\n" \
                          "提示：语音功能一共有3个指令，#语音切换，#音色切换，#朗读+[需要朗读的文案]", group_id)
-        global_var.user_needvoice[history_id] = 4
+        global_var.get_user_cache(history_id).needvoice = 4
         return
 
-    del global_var.user_needvoice[history_id]
+    global_var.get_user_cache(history_id).needvoice = None
     at_user_in_group(sender, sender, "恢复到文本对话", group_id)
 
 def operation_switch_sound(sender, message, group_id):
@@ -271,7 +271,7 @@ def operation_switch_sound(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.user_needvoice:
+    if not global_var.get_user_cache(history_id).needvoice:
         operation_switch_voice(sender, message, group_id)
         return
 
@@ -285,19 +285,20 @@ def operation_switch_sound(sender, message, group_id):
         6:"现在是优菈与您对话",
         7:"现在是派蒙与您对话"
     }
-    global_var.user_needvoice[history_id] = (global_var.user_needvoice[history_id] + 1) % len(speaker_dict)
-    if global_var.user_needvoice[history_id] in [0,1]:
-        send_record_to_group_jp(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
+    global_var.get_user_cache(history_id).needvoice = (global_var.get_user_cache(history_id).needvoice + 1) % len(speaker_dict)
+    needvoice = global_var.get_user_cache(history_id).needvoice
+    if global_var.get_user_cache(history_id).needvoice in [0,1]:
+        send_record_to_group_jp(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
     else:
-        send_record_to_group(sender, f"{speaker_dict[global_var.user_needvoice[history_id]]}", group_id, global_var.user_needvoice[history_id])
+        send_record_to_group(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
 
 def operation_voice(sender, message, group_id):
     message = message.replace("#朗读 ","")
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.user_needvoice:
+    if not global_var.get_user_cache(history_id).needvoice:
         operation_switch_voice(sender, message, group_id)
         return
-    send_record_to_group(sender, f"{message}", group_id, global_var.user_needvoice[history_id])
+    send_record_to_group(sender, f"{message}", group_id, global_var.get_user_cache(history_id).needvoice)
     return
 
 def operation_switch_model(sender, message, group_id):
