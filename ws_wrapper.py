@@ -42,7 +42,6 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3):
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
     fh = song.export(path_out, format='mp3', bitrate='32k')
     # sound = miraicle.Voice(base64=path_out)
-    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{word_before_voice}", group_id)
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
@@ -53,6 +52,7 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3):
             "message_source": message_source
         }
     }))
+    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{message}", group_id)
 
 def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
@@ -63,7 +63,6 @@ def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
     fh = song.export(path_out, format='mp3', bitrate='32k')
     # sound = miraicle.Voice(base64=path_out)
-    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{word_before_voice}", group_id)
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
@@ -74,3 +73,4 @@ def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
             "message_source": message_source
         }
     }))
+    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{message}", group_id)

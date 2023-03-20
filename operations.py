@@ -223,18 +223,18 @@ def operation_clear_chat(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.chat_history:
+    if history_id not in global_var.get_user_cache(history_id):
         at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
         return
 
     if shared_context:
         if sender == master_id:
-            global_var.chat_history[history_id].clear()
+            global_var.get_user_cache(history_id).chat_history.clear()
             at_user_in_group(sender, sender, "已清理群内共享对话上下文", group_id)
         else:
             at_user_in_group(sender, sender, "权限不足", group_id)
     else:
-        global_var.chat_history[history_id].clear()
+        global_var.get_user_cache(history_id).chat_history.clear()
         at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
 
 

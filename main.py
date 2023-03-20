@@ -1,4 +1,3 @@
-import collections
 import sys
 import time
 import re
@@ -48,21 +47,18 @@ def image_message_handler_thread():
 
 def get_chat_pair(group_id, sender):
     history_id = get_history_id(group_id, sender)
-    if history_id not in global_var.chat_history:
-        global_var.chat_history[history_id] = collections.deque(maxlen=context_length)
-        return ''
 
-    if len(global_var.chat_history[history_id]) == 0:
+    if len(global_var.get_user_cache(history_id).chat_history) == 0:
         return ''
     else:
         if not (global_var.use_chatgpt and global_var.billing_chatgpt):
             chat_pair = ''
-            for chat in global_var.chat_history[history_id]:
+            for chat in global_var.get_user_cache(history_id).chat_history:
                 chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
             return chat_pair
         else:
             chat_pair = []
-            for chat in global_var.chat_history[history_id]:
+            for chat in global_var.get_user_cache(history_id).chat_history:
                 chat_pair.append({"role": "user", "content": chat['question']})
                 chat_pair.append({"role": "assistant", "content": chat['answer']})
             return chat_pair
@@ -142,7 +138,7 @@ def chat_handler_thread(group_id, question, sender):
             traceback.print_exc()
             return
 
-    global_var.chat_history[get_history_id(group_id, sender)].append({"question": question, "answer": answer})
+    global_var.get_user_cache(get_history_id(group_id, sender)).chat_history.append({"question": question, "answer": answer})
 
     pattern = r"\[paint_prompt:\s*(.*?)\]"
     match = re.search(pattern, answer)
