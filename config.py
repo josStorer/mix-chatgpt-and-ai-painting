@@ -44,11 +44,22 @@ auth_ban_id = {345678}  # 有权限拉黑他人, 禁止其使用机器人的用�
 auth_blacklist_id = {345678}  # 有权限查看黑名单的用户qq号
 auth_set_online_id = {345678}  # 有权限使用上线的用户qq号
 auth_set_offline_id = {345678}  # 有权限使用下线的用户qq号
+auth_set_gpt = {345678} # 有权限修改gpt参数的用户qq号
 
 gpu_connected_msg = "gpu已接入"
 gpu_disconnected_msg = "gpu已离线"
 paint_command_msg = "#画图"
 delete_command_msg = "#撤回"
+chat_prompt_model_msg = "#人设"
+chat_prompt_model_msg2 = "#人格"
+add_chat_prompt_model_msg = "#增加人设"
+add_chat_prompt_model_msg2 = "#添加人设"
+add_chat_prompt_model_msg3 = "#新增人设"
+add_chat_prompt_model_msg4 = "#加入人设"
+add_chat_prompt_model_msg5 = "#增加人格"
+add_chat_prompt_model_msg6 = "#添加人格"
+add_chat_prompt_model_msg7 = "#新增人格"
+add_chat_prompt_model_msg8 = "#加入人格"
 start_gen_tag_msg = "开始生成."  # 同时用于让远程服务器确认gpu在线
 
 # AI绘画的默认参数
@@ -84,7 +95,7 @@ gen_param = {
     "inpaint_full_res_padding": 0,
     "inpainting_mask_invert": 0,
     "initial_noise_multiplier": 1,
-    "prompt": "masterpiece, best quality, beautiful girl",
+    "prompt": "masterpiece, best quality",
     "seed": -1,
     "subseed": -1,
     "subseed_strength": 0,
@@ -138,3 +149,12 @@ chatgpt_prompt_base = '你是一只可爱的猫娘，而提问用户是你的主
                       '并在回复末尾插入\'[paint_prompt: 生成的关键词或句子]\'供后台的AI绘画程序使用，' \
                       '对于其他常规对话，则不需要插入这些关键词，只需要直接回复。'
 
+#multi-gpt_prompt_base
+multi_chatgpt_prompt_base = {
+  'default': chatgpt_prompt_base,
+  'chatgpt': '你是AI 帮助人们回答问题。',
+}
+    # '这些细节包括但不限于：（手慢慢地伸进裙子里面）（深呼吸）（开始加快手指的速度）（开始发出淫荡的声音）（双手托起裙子，慢慢的揉捏自己的胸部）（蹲下来将手伸进裤里）',
+common_chat_history = {}
+
+reg_dirty = r"VPN"
