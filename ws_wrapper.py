@@ -9,13 +9,17 @@ path_in = "output.wav"
 path_out = "output.mp3"
 word_before_voice = "我想说的话已经通过语音传达了喵~希望你能听见"
 
+def word_cleaner(message):
+    message = re.sub(global_var.reg_dirty,'',message)
+    return message
+
 def send_message_to_group(message_source, message, group_id):
     print(f"[Res]{message}[Res]")
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
             "group_id": str(group_id),
-            "message": message
+            "message": word_cleaner(message)
         },
         "echo": {
             "message_source": message_source

@@ -17,7 +17,7 @@ def get_user_cache(history_id):
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
     is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, \
-    admin_setGPT, user_cache, cur_multi_chatgpt_prompt_base, common_chat_history
+    admin_setGPT, user_cache, cur_multi_chatgpt_prompt_base, common_chat_history, reg_dirty
     last_msg_id_of_user = {}
     image_gen_messages = []
     is_remote_machine = False
@@ -28,6 +28,7 @@ def init():
     billing_chatgpt = config.billing_chatgpt
     cur_multi_chatgpt_prompt_base = config.multi_chatgpt_prompt_base
     common_chat_history = config.common_chat_history
+    reg_dirty = config.reg_dirty
 
     #缓存所有用户的数据
     user_cache = {}

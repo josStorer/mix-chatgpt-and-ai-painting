@@ -60,7 +60,9 @@ def get_chat_pair(group_id, sender):
             chat_pair = []
             if global_var.get_user_cache(history_id).chat_prompt_model in global_var.common_chat_history:
                 for chat in global_var.common_chat_history[global_var.get_user_cache(history_id).chat_prompt_model]:
-                    chat_pair.append({"role": "user", "content": chat['question']})
+                    for character_name in ['system','user']:
+                        if character_name in chat:
+                            chat_pair.append({"role": character_name, "content": chat[character_name]})
                     chat_pair.append({"role": "assistant", "content": chat['answer']})
             for chat in global_var.get_user_cache(history_id).chat_history:
                 chat_pair.append({"role": "user", "content": chat['question']})
