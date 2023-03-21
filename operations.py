@@ -445,22 +445,25 @@ def operation_chat_prompt_model(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
-    new_message = message.replace(chat_prompt_model_msg, "")
+    new_message = message
+    for replace_msg in [chat_prompt_model_msg,chat_prompt_model_msg2]:
+        new_message = new_message.replace(replace_msg, "")
+
     new_message = new_message.strip()
 
     try:
         history_id = get_history_id(group_id, sender)
         if new_message == "":
             at_user_in_group(
-                sender, sender, f"当前激活模型:\n{global_var.get_user_cache(history_id).chat_prompt_model}\n\n当前可用模型:\n" + "\n".join(global_var.cur_multi_chatgpt_prompt_base), group_id)
+                sender, sender, f"当前激活人设:\n{global_var.get_user_cache(history_id).chat_prompt_model}\n\n当前可用人设:\n" + "\n".join(global_var.cur_multi_chatgpt_prompt_base), group_id)
         else:
             for model_title in global_var.cur_multi_chatgpt_prompt_base:
                 if new_message.lower() in model_title.lower():
                     global_var.get_user_cache(history_id).chat_prompt_model = model_title
-                    at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id)
+                    at_user_in_group(sender, sender, f"已切换至人设:\n{model_title}", group_id)
                     operation_clear_chat(sender, message, group_id)
                     return
-            at_user_in_group(sender, sender, "未找到匹配的模型", group_id)
+            at_user_in_group(sender, sender, "未找到匹配的人设", group_id)
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
@@ -470,7 +473,8 @@ def operation_add_chat_prompt_model(sender, message, group_id):
         return
 
     new_message = message
-    for replace_msg in [add_chat_prompt_model_msg,add_chat_prompt_model_msg2,add_chat_prompt_model_msg3,add_chat_prompt_model_msg4]:
+    for replace_msg in [add_chat_prompt_model_msg,add_chat_prompt_model_msg2,add_chat_prompt_model_msg3,add_chat_prompt_model_msg4,
+                        add_chat_prompt_model_msg5,add_chat_prompt_model_msg6,add_chat_prompt_model_msg7,add_chat_prompt_model_msg8]:
         new_message = new_message.replace(replace_msg, "")
     new_message = new_message.strip()
     new_message = new_message.split(" ",1)
@@ -486,6 +490,23 @@ def operation_add_chat_prompt_model(sender, message, group_id):
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
+
+def debug_exec(sender, message, group_id):
+    if sender != master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id)
+        return
+
+    new_message = message.replace("#exec", "")
+    new_message = new_message.strip()
+
+    try:
+        loc = locals()
+        exec(f"cur_debugdata = {new_message}")
+        at_user_in_group(sender, sender, f"run successful ! {loc['cur_debugdata']}", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+    return
 
 both_operations = {
     "#上线": operation_set_online,
@@ -510,10 +531,16 @@ both_operations = {
     "#余额": operation_show_balance,
     "#gptset": operation_set_gpt,
     chat_prompt_model_msg: operation_chat_prompt_model,
+    chat_prompt_model_msg2: operation_chat_prompt_model,
     add_chat_prompt_model_msg: operation_add_chat_prompt_model,
     add_chat_prompt_model_msg2: operation_add_chat_prompt_model,
     add_chat_prompt_model_msg3: operation_add_chat_prompt_model,
     add_chat_prompt_model_msg4: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg5: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg6: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg7: operation_add_chat_prompt_model,
+    add_chat_prompt_model_msg8: operation_add_chat_prompt_model,
+    "#exec":  debug_exec,
  }
 
 remote_operations = {

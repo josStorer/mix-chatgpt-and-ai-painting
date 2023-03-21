@@ -10,7 +10,7 @@ path_out = "output.mp3"
 word_before_voice = "我想说的话已经通过语音传达了喵~希望你能听见"
 
 def word_cleaner(message):
-    message = re.sub(global_var.reg_dirty,'',message)
+    message = re.sub(global_var.reg_dirty,'**',message)
     return message
 
 def send_message_to_group(message_source, message, group_id):
