@@ -13,13 +13,13 @@ def word_cleaner(message):
     message = re.sub(global_var.reg_dirty,'**',message)
     return message
 
-def send_message_to_group(message_source, message, group_id):
+def send_message_to_group(message_source, message, group_id, bCleaned = False):
     print(f"[Res]{message}[Res]")
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
             "group_id": str(group_id),
-            "message": word_cleaner(message)
+            "message": word_cleaner(message) if not bCleaned else message
         },
         "echo": {
             "message_source": message_source

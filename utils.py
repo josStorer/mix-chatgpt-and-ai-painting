@@ -106,7 +106,7 @@ def gen_img2img(sender, gen_message, group_id):
     return image, image_info["seed"], real_payload["prompt"]
 
 
-def at_user_in_group(message_source, at_user_id, text, group_id):
+def at_user_in_group(message_source, at_user_id, text, group_id, bCleaned = False):
     # if text == "权限不足":
     #     return
     history_id = get_history_id(group_id, at_user_id)
@@ -114,12 +114,13 @@ def at_user_in_group(message_source, at_user_id, text, group_id):
         send_record_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id, global_var.get_user_cache(history_id).needvoice)
         return
 
-    send_message_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id)
+    send_message_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id, bCleaned)
 
 
 def send_err_to_group(message_source, e, group_id):
+    import traceback
+    traceback.print_exc()
     send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n错误:\n{str(e) if str(e) != '' else e.message}", group_id)
-
 
 class ResettableTimer(object):
     def __init__(self, interval, function):

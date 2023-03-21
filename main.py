@@ -11,7 +11,6 @@ import global_var
 from operations import *
 from utils import *
 from ws_wrapper import *
-import traceback
 
 chatbot = None
 
@@ -31,12 +30,11 @@ def image_message_handler_thread():
                         if show_prompt:
                             at_user_in_group(sender, sender,
                                              f"prompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
-                                             group_id)
+                                             group_id, bCleaned = True)
                         else:
-                            at_user_in_group(sender, sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id)
+                            at_user_in_group(sender, sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id, bCleaned = True)
                     except Exception as e:
                         send_err_to_group(sender, e, group_id)
-                        traceback.print_exc()
             else:
                 if not is_group_online(group_id):
                     at_user_in_group(sender, sender, "该群聊响应未上线", group_id)
@@ -51,7 +49,7 @@ def get_chat_pair(group_id, sender):
     if len(global_var.get_user_cache(history_id).chat_history) == 0:
         return ''
     else:
-        if not (global_var.use_chatgpt and global_var.billing_chatgpt):
+        if (not (global_var.use_chatgpt and global_var.billing_chatgpt)) or global_var.admin_setGPT['model'] == "gpt-4":
             chat_pair = ''
             for chat in global_var.get_user_cache(history_id).chat_history:
                 chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
@@ -114,7 +112,8 @@ def chat_handler_thread(group_id, question, sender):
                 })
             chatbot.conversation_id = None
             chatbot.parent_id = None
-            chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+            # chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+            chat_prompt = question
             for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                 answer = data["message"]
         except Exception as e:
@@ -156,7 +155,6 @@ def chat_handler_thread(group_id, question, sender):
                 answer = completion.choices[0].message.content
         except Exception as e:
             send_err_to_group(sender, e, group_id)
-            traceback.print_exc()
             return
 
     global_var.get_user_cache(get_history_id(group_id, sender)).chat_history.append({"question": question, "answer": answer})
