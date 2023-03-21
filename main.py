@@ -103,12 +103,20 @@ def chat_handler_thread(group_id, question, sender):
     ##图生图接入 end
 
     answer = ""
-    if not global_var.admin_setGPT['model'] == "gpt-3.5-turbo":
+    if global_var.admin_setGPT['model'] == "gpt-4":
         try:
+            if not chatbot:
+                chatbot = Chatbot(config={
+                    "email": config.email,
+                    "password": config.password,
+                    "proxy": "127.0.0.1:19180",
+                    "model": global_var.admin_setGPT['model']
+                })
+            chatbot.conversation_id = None
+            chatbot.parent_id = None
             chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
-            completion = openai.Completion.create(engine=global_var.admin_setGPT['model'], prompt=chat_prompt, max_tokens=500,
-                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
-            answer = completion.choices[0].text
+            for data in chatbot.ask(chat_prompt, None, None, api_timeout):
+                answer = data["message"]
         except Exception as e:
             send_err_to_group(sender, e, group_id)
             return
