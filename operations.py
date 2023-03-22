@@ -490,6 +490,12 @@ def operation_add_chat_prompt_model(sender, message, group_id):
     except Exception as e:
         send_err_to_group(sender, e, group_id)
         return
+    
+    try:
+        global_var.save_cur_multi_chatgpt_prompt_base(sender,group_id,model_name,new_message)
+    except Exception as e:
+        print(f"Warning:{e}")
+
 
 def debug_exec(sender, message, group_id):
     if sender != master_id:

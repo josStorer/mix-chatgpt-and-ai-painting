@@ -14,6 +14,11 @@ def get_user_cache(history_id):
         user_cache[history_id] = user_cache_data()
     return user_cache[history_id]
 
+def save_cur_multi_chatgpt_prompt_base(sender,group_id,model_name,message):
+    with open(f"user_prompt_base/{group_id}_{sender}_{model_name}","w") as f:
+        f.write(message)
+    return
+
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
     is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, \
