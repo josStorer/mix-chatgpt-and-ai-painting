@@ -143,6 +143,25 @@ def chat_handler_thread(group_id, question, sender):
                 chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
                 for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                     answer = data["message"]
+            elif global_var.admin_setGPT['model'] == "glm":
+                # chatglm-6b-int4
+                pair = get_chat_pair(group_id, sender)
+                chat_prompt = (pair if pair else [])
+                chat_prompt.insert(0, {"role": "system", 
+                    "content": global_var.cur_multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model]})
+                chat_prompt.append({"role": "user", "content": question})
+
+                real_payload = {
+                "messages": chat_prompt,
+                "model": "chatglm-6b-int4",
+                "stream": False,
+                "max_tokens": 1000
+                }
+                response = requests.post(url=f'{chatglm_url}/chat/completions', json=real_payload)
+
+                answer1 = response._content.decode("utf-8")
+
+                answer = answer1.replace("data: ","",1)
             else:
                 # gpt3.5 turbo
                 pair = get_chat_pair(group_id, sender)
