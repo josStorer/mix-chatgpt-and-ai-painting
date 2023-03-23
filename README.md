@@ -39,6 +39,8 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
+4. Python版本安装3.10以内的版本,3.11在pip的时候会无法安装需要的依赖库.
+
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开, windows一般使用windows_amd64.exe
