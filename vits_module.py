@@ -9,6 +9,7 @@ import re
 from torch import no_grad, LongTensor
 from winsound import PlaySound
 from vits.symbols import symbols as symbols_for_paimon
+import global_var
 
 idmessage = """ID      Speaker
 0       綾地寧々
@@ -104,23 +105,23 @@ def generateSound(inputString,language,speakerID = 3):
         escape = False
 
     if language=="ch":
-        model = r".\model\CN\model.pth"
-        config = r".\model\CN\config.json"
+        model = f"{global_var.cwd_path}\\model\\CN\\model.pth"
+        config = f"{global_var.cwd_path}\\model\\CN\\config.json"
     elif language=="jp":
-        model = r".\model\H_excluded.pth"
-        config = r".\model\config.json"
+        model = f"{global_var.cwd_path}\\model\\H_excluded.pth"
+        config = f"{global_var.cwd_path}\\model\\config.json"
     elif language=="multi":
-        model = r".\model\Multi\multi.pth"
-        config = r".\model\Multi\config.json"
+        model = f"{global_var.cwd_path}\\model\\Multi\\multi.pth"
+        config = f"{global_var.cwd_path}\\model\\Multi\\config.json"
 
     if speakerID > 3: 
     #   锦木千束
         en_name = speaker_dict[speakerID]
-        model = f".\\model\\{en_name}\\{en_name}.pth"
-        config = r".\model\config804.json"
+        model = f"{global_var.cwd_path}\\model\\{en_name}\\{en_name}.pth"
+        config = f"{global_var.cwd_path}\\model\\config804.json"
 
         if speakerID == 7:
-            config = f".\\model\\{en_name}\\config_{en_name}.json"
+            config = f"{global_var.cwd_path}\\model\\{en_name}\\config_{en_name}.json"
             hps_ms = utils.get_hparams_from_file(config)
             net_g = SynthesizerTrn(
                 len(symbols_for_paimon),

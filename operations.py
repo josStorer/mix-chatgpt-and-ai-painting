@@ -404,8 +404,6 @@ def operation_switch_lora(sender, message, group_id):
         return
 
 def operation_show_balance(sender, _, group_id):
-    if global_var.is_remote_machine:
-        return
 
     response = requests.get("https://api.openai.com/dashboard/billing/credit_grants", headers={
         "Content-Type": 'application/json',
