@@ -45,7 +45,7 @@ def load_all_user_data():
     import pickle
     try:
         with open(f"{cwd_path}\\{config.user_database_path}\\lastdata","rb") as f:
-            data = pickle.load(user_cache,f)
+            data = pickle.load(f)
     except:
         data = {}
     return data
