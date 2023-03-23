@@ -31,6 +31,9 @@ gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 gpu_api_img = "/sdapi/v1/img2img"
 
+user_database_path = "user_database" # 全部用户数据的保存路径
+user_prompt_base_path = "user_prompt_base" # 人设的保存路径
+
 working_groups = {123, 456}  # 默认启用机器人的群号, 仍可通过在群内使用 #上线 指令主动添加
 master_id = 123456  # 机器人拥有者qq号
 bot_id = 789  # 机器人自身的qq号
