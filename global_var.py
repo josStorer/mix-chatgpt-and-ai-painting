@@ -10,24 +10,45 @@ class user_cache_data:
         self.chat_history = collections.deque(maxlen=config.context_length)
         self.chat_prompt_model = 'default'
 
+
 def get_user_cache(history_id):
     if history_id not in user_cache:
         user_cache[history_id] = user_cache_data()
     return user_cache[history_id]
 
 def save_cur_multi_chatgpt_prompt_base(sender,group_id,model_name,message):
-    with open(f"{cwd_path}\\user_prompt_base\\{group_id}_{sender}_{model_name}","w") as f:
+    with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{group_id}_{sender}_{model_name}","w") as f:
         f.write(message)
     return
 
 def load_all_multi_chatgpt_prompt_base():
     global cur_multi_chatgpt_prompt_base
-    for foldername, subfolders, filenames in os.walk(f"{cwd_path}\\user_prompt_base"):
+    for foldername, subfolders, filenames in os.walk(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}"):
         for filename in filenames:
-            with open(f"{cwd_path}\\user_prompt_base\\{filename}") as f:
+            with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{filename}") as f:
                 group_user_modelname = filename.split('_',2)
                 cur_multi_chatgpt_prompt_base[group_user_modelname[2]] = f.read()
     return
+
+def save_all_user_data():
+    import time
+    import pickle
+    data = pickle.dumps(user_cache)
+    time_stamp = int(time.time())
+    with open(f"{cwd_path}\\{config.user_database_path}\\{time_stamp}","wb") as f:
+        f.write(data)
+    with open(f"{cwd_path}\\{config.user_database_path}\\lastdata","wb") as f:
+        f.write(data)
+    return time_stamp
+
+def load_all_user_data():
+    import pickle
+    try:
+        with open(f"{cwd_path}\\{config.user_database_path}\\lastdata","rb") as f:
+            data = pickle.load(user_cache,f)
+    except:
+        data = {}
+    return data
 
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
@@ -50,7 +71,7 @@ def init():
     load_all_multi_chatgpt_prompt_base()
 
     #缓存所有用户的数据
-    user_cache = {}
+    user_cache = load_all_user_data()
     admin_setGPT = {"model":"gpt-3.5-turbo"}
 
     ws = None

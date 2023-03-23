@@ -512,6 +512,13 @@ def debug_exec(sender, message, group_id):
         return
     return
 
+def save_all_user_data(sender, message, group_id):
+    try:
+        at_user_in_group(sender, sender, f"快照完成 {global_var.save_all_user_data()}", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+    return
+
 both_operations = {
     "#上线": operation_set_online,
     "#下线": operation_set_offline,
@@ -545,6 +552,7 @@ both_operations = {
     add_chat_prompt_model_msg7: operation_add_chat_prompt_model,
     add_chat_prompt_model_msg8: operation_add_chat_prompt_model,
     "#exec":  debug_exec,
+    "#快照": save_all_user_data,
  }
 
 remote_operations = {
