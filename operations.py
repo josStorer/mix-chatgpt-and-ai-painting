@@ -367,10 +367,6 @@ def operation_switch_lora(sender, message, group_id):
     if global_var.is_remote_machine:
         return
 
-    if sender != master_id:
-        at_user_in_group(sender, sender, "权限不足", group_id)
-        return
-
     new_message = message.replace("#lora", "")
     new_message = new_message.strip()
 
