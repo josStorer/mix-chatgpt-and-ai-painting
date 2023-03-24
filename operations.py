@@ -400,16 +400,26 @@ def operation_switch_lora(sender, message, group_id):
         return
 
 def operation_show_balance(sender, _, group_id):
-
-    response = requests.get("https://api.openai.com/dashboard/billing/credit_grants", headers={
-        "Content-Type": 'application/json',
-        "Authorization": f"Bearer {api_key}",
-    })
-
-    if response.status_code == 200:
-        at_user_in_group(sender, sender, response.text, group_id)
-    else:
-        at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
+    balance_text = ""
+    for cur_api_key in wait_api_key:
+        response = requests.get("https://api.openai.com/dashboard/billing/credit_grants", headers={
+            "Content-Type": 'application/json',
+            "Authorization": f"Bearer {cur_api_key}",
+        })
+        try:
+            if response.status_code == 200:
+                # print(response.text)
+                temp_text = response.text.split("\"grant_amount\": ",1)[1].split(",",1)
+                grant_amount = temp_text[0]
+                used_amount = temp_text[1].split("\"used_amount\": ",1)[1].split(",",1)[0]
+                balance_text += f"Key【{cur_api_key[-4:]}】:{used_amount}/{grant_amount},\n"
+                # at_user_in_group(sender, sender, response.text, group_id)
+            else:
+                balance_text += f"Key【{cur_api_key[-4:]}】:查询失败,\n"
+        except:
+            balance_text += f"Key【{cur_api_key[-4:]}】:已停用,\n"
+            # at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
+    at_user_in_group(sender, sender, balance_text, group_id)
 
 
 def operation_set_gpt(sender, message, group_id):
