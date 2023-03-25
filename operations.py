@@ -1,3 +1,4 @@
+from vits_const import *
 from utils import *
 from ws_wrapper import *
 import global_var
@@ -283,7 +284,7 @@ def operation_switch_sound(sender, message, group_id):
         4:"现在是锦木千束与您对话",
         5:"现在是刻晴与您对话",
         6:"现在是优菈与您对话",
-        7:"现在是派蒙与您对话"
+        Paimon_Test_Index:"现在是派蒙与您对话"
     }
     global_var.get_user_cache(history_id).needvoice = (global_var.get_user_cache(history_id).needvoice + 1) % len(speaker_dict)
     needvoice = global_var.get_user_cache(history_id).needvoice

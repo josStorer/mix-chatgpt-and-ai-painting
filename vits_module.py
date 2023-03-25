@@ -1,3 +1,4 @@
+from vits_const import *
 from scipy.io.wavfile import write
 from vits.mel_processing import spectrogram_torch
 from text import text_to_sequence, text_to_sequence_paimon
@@ -11,12 +12,6 @@ from winsound import PlaySound
 from vits.symbols import symbols as symbols_for_paimon
 import global_var
 
-idmessage = """ID      Speaker
-0       綾地寧々
-1       在原七海
-2       小茸
-3       唐乐吟
-"""
 speaker_dict = {
     0:"綾地寧々",
     1:"在原七海",
@@ -25,7 +20,7 @@ speaker_dict = {
     4:"chisato",
     5:"keqing",
     6:"eula",
-    7:"paimon",
+    Paimon_Test_Index:"paimon",
 }
 
 def get_pth_speaker_id(speakerID):
@@ -35,14 +30,14 @@ def get_pth_speaker_id(speakerID):
         4:0,
         5:115,
         6:124,
-        7:0
+        Paimon_Test_Index:0
     }[speakerID]
 
 def is_multi(speakerID):
     return speakerID in [0,1,2,3,5,6]
 
 def get_lnnw(speakerID):
-    if speakerID <= 3 or speakerID == 7:
+    if speakerID <= 3 or speakerID == Paimon_Test_Index:
         return 1, 0.667, 0.8
     return 1.2, 0.6, 0.668
 
@@ -120,7 +115,7 @@ def generateSound(inputString,language,speakerID = 3):
         model = f"{global_var.cwd_path}\\model\\{en_name}\\{en_name}.pth"
         config = f"{global_var.cwd_path}\\model\\config804.json"
 
-        if speakerID == 7:
+        if speakerID == Paimon_Test_Index:
             config = f"{global_var.cwd_path}\\model\\{en_name}\\config_{en_name}.json"
             hps_ms = utils.get_hparams_from_file(config)
             net_g = SynthesizerTrn(
@@ -149,7 +144,7 @@ def generateSound(inputString,language,speakerID = 3):
     hps_ms = utils.get_hparams_from_file(config)
     n_speakers = hps_ms.data.n_speakers if is_multi(speakerID) else 0
     # @note:留着这段，以后再做通用处理吧，累了
-    # if speakerID == 7:
+    # if speakerID == Paimon_Test_Index:
     #     hps_ms.symbols = symbols_for_paimon
     n_symbols = len(hps_ms.symbols) if 'symbols' in hps_ms.keys() else 0
     emotion_embedding = hps_ms.data.emotion_embedding if 'emotion_embedding' in hps_ms.data.keys() else False

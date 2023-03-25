@@ -1,3 +1,4 @@
+from vits_const import *
 import json
 import base64
 import global_var
@@ -37,7 +38,7 @@ def delete_msg(msg_id):
 
 def send_record_to_group(message_source, message, group_id, speakerID = 3):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
-    if speakerID != 7:
+    if speakerID != Paimon_Test_Index:
         message = f"[ZH]{message}[ZH]"
     print(f"{message}")
     generateSound(f"{message}","ch",speakerID)
