@@ -36,7 +36,7 @@ def delete_msg(msg_id):
 
 def send_record_to_group(message_source, message, group_id, speakerID = 3):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
-    if not message.startswith("["):
+    if not message.startswith("[") and speakerID != Paimon_Test_Index:
         message = f"[ZH]{message}[ZH]"
     print(f"{message}")
     generateSound(f"{message}","ch",speakerID)
