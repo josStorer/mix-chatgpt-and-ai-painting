@@ -135,7 +135,7 @@ def generateSound(inputString,language,speakerID = 3):
             text = inputString # "现在是派蒙与您对话" #@param {type: 'string'}
             length_scale = 1 #@param {type:"slider", min:0.1, max:3, step:0.05}
             filename = 'output' #@param {type: "string"}
-            audio_path = f'{filename}.wav'
+            audio_path = f'{global_var.cwd_path}\\{filename}.wav'
             stn_tst = get_text_paimon(text, hps_ms)
             with no_grad():
                 x_tst = stn_tst.unsqueeze(0)
@@ -178,7 +178,7 @@ def generateSound(inputString,language,speakerID = 3):
 
             speaker_id = get_pth_speaker_id(speakerID)
 
-            out_path = "output.wav"
+            out_path = f"{global_var.cwd_path}\\output.wav"
 
             with no_grad():
                 x_tst = stn_tst.unsqueeze(0)

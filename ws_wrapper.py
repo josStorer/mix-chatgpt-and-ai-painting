@@ -5,8 +5,8 @@ from pydub import AudioSegment
 from vits_module import generateSound
 import re
 # 音频文件路径
-path_in = "output.wav"
-path_out = "output.mp3"
+path_in = f"{global_var.cwd_path}\\output.wav"
+path_out = f"{global_var.cwd_path}\\output.mp3"
 word_before_voice = "我想说的话已经通过语音传达了喵~希望你能听见"
 
 def word_cleaner(message):
