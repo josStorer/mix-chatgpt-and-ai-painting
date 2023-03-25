@@ -1,5 +1,9 @@
 import re
+import jieba, cn2an
+from pypinyin import lazy_pinyin, BOPOMOFO
 
+# Regular expression matching whitespace:
+_whitespace_re = re.compile(r'\s+')
 
 def japanese_cleaners(text):
     from text.japanese import japanese_to_romaji_with_accent
@@ -33,14 +37,26 @@ def chinese_cleaners(text):
 
 
 def zh_ja_mixture_cleaners(text):
-    from text.mandarin import chinese_to_romaji
     from text.japanese import japanese_to_romaji_with_accent
-    text = re.sub(r'\[ZH\](.*?)\[ZH\]',
-                  lambda x: chinese_to_romaji(x.group(1))+' ', text)
-    text = re.sub(r'\[JA\](.*?)\[JA\]', lambda x: japanese_to_romaji_with_accent(
-        x.group(1)).replace('ts', 'ʦ').replace('u', 'ɯ').replace('...', '…')+' ', text)
-    text = re.sub(r'\s+$', '', text)
-    text = re.sub(r'([^\.,!\?\-…~])$', r'\1.', text)
+    from text.mandarin import number_to_chinese,chinese_to_bopomofo,latin_to_bopomofo,bopomofo_to_romaji
+    chinese_texts=re.findall(r'\[ZH\].*?\[ZH\]',text)
+    japanese_texts=re.findall(r'\[JA\].*?\[JA\]',text)
+    for chinese_text in chinese_texts:
+        cleaned_text = number_to_chinese(chinese_text[4:-4])
+        cleaned_text = chinese_to_bopomofo(cleaned_text)
+        cleaned_text = latin_to_bopomofo(cleaned_text)
+        cleaned_text = bopomofo_to_romaji(cleaned_text)
+        cleaned_text = re.sub('i[aoe]',lambda x:'y'+x.group(0)[1:],cleaned_text)
+        cleaned_text = re.sub('u[aoəe]',lambda x:'w'+x.group(0)[1:],cleaned_text)
+        cleaned_text = re.sub('([ʦsɹ]`[⁼ʰ]?)([→↓↑]+)',lambda x:x.group(1)+'ɹ`'+x.group(2),cleaned_text).replace('ɻ','ɹ`')
+        cleaned_text = re.sub('([ʦs][⁼ʰ]?)([→↓↑]+)',lambda x:x.group(1)+'ɹ'+x.group(2),cleaned_text)
+        text = text.replace(chinese_text,cleaned_text+' ',1)
+    for japanese_text in japanese_texts:
+        cleaned_text=japanese_to_romaji_with_accent(japanese_text[4:-4]).replace('ts','ʦ').replace('u','ɯ').replace('...','…')
+        text = text.replace(japanese_text,cleaned_text+' ',1)
+    text = text[:-1]
+    if re.match('[A-Za-zɯɹəɥ→↓↑]',text[-1]):
+        text += '.'
     return text
 
 

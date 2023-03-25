@@ -5,9 +5,7 @@ import global_var
 from pydub import AudioSegment
 from vits_module import generateSound
 import re
-# 音频文件路径
-path_in = f"{global_var.cwd_path}\\output.wav"
-path_out = f"{global_var.cwd_path}\\output.mp3"
+
 word_before_voice = "我想说的话已经通过语音传达了喵~希望你能听见"
 
 def word_cleaner(message):
@@ -38,15 +36,15 @@ def delete_msg(msg_id):
 
 def send_record_to_group(message_source, message, group_id, speakerID = 3):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
-    if speakerID != Paimon_Test_Index:
+    if not message.startswith("["):
         message = f"[ZH]{message}[ZH]"
     print(f"{message}")
     generateSound(f"{message}","ch",speakerID)
     # 读取音频文件，设置采样率<default=44100>
-    song = AudioSegment.from_wav(path_in).set_frame_rate(22050)
+    song = AudioSegment.from_wav(f"{global_var.cwd_path}\\output.wav").set_frame_rate(22050)
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
-    fh = song.export(path_out, format='mp3', bitrate='32k')
-    # sound = miraicle.Voice(base64=path_out)
+    fh = song.export(f"{global_var.cwd_path}\\output.mp3", format='mp3', bitrate='32k')
+    # sound = miraicle.Voice(base64=f"{global_var.cwd_path}\\output.mp3")
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {
@@ -64,10 +62,10 @@ def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
     print(f"{message}")
     generateSound(f"{message}","jp",speakerID)
     # 读取音频文件，设置采样率<default=44100>
-    song = AudioSegment.from_wav(path_in).set_frame_rate(22050)
+    song = AudioSegment.from_wav(f"{global_var.cwd_path}\\output.wav").set_frame_rate(22050)
     # 按32k的bitrate导出文件到指定路径,这里是直接覆盖原文件
-    fh = song.export(path_out, format='mp3', bitrate='32k')
-    # sound = miraicle.Voice(base64=path_out)
+    fh = song.export(f"{global_var.cwd_path}\\output.mp3", format='mp3', bitrate='32k')
+    # sound = miraicle.Voice(base64=f"{global_var.cwd_path}\\output.mp3")
     global_var.ws.send(json.dumps({
         "action": "send_group_msg",
         "params": {

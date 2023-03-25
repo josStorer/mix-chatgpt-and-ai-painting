@@ -295,6 +295,9 @@ def operation_switch_sound(sender, message, group_id):
 
 def operation_voice(sender, message, group_id):
     message = message.replace("#朗读 ","")
+    # QQ 转义字符 start
+    message = message.replace("&#91;","[").replace("&#93;","]")
+    # QQ 转义字符 end
     history_id = get_history_id(group_id, sender)
     if not global_var.get_user_cache(history_id).needvoice:
         operation_switch_voice(sender, message, group_id)

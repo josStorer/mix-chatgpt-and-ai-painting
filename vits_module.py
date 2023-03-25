@@ -94,10 +94,6 @@ def get_label(text, label):
 
 
 def generateSound(inputString,language,speakerID = 3):
-    if '--escape' in sys.argv:
-        escape = True
-    else:
-        escape = False
 
     if language=="ch":
         model = f"{global_var.cwd_path}\\model\\CN\\model.pth"
