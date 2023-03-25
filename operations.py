@@ -279,14 +279,14 @@ def operation_switch_sound(sender, message, group_id):
     global speaker_dict,speakername_lst
     if speaker_dict is None or speakername_lst is None:
         speaker_dict = {
-            0:"綾地寧々放送です",
-            1:"ありはら ななみ放送です",
-            2:"现在是小茸与您对话",
-            3:"现在是唐乐吟与您对话",
-            4:"现在是锦木千束与您对话",
-            5:"现在是刻晴与您对话",
-            6:"现在是优菈与您对话",
-            Paimon_Test_Index:"现在是派蒙与您对话"
+            0:"綾地寧々放送です。",
+            1:"ありはら ななみ放送です。",
+            2:"现在是小茸与您对话。",
+            3:"现在是唐乐吟与您对话。",
+            4:"[ZH]现在是锦木千束与您对话。[ZH][JA]今日はいい天気ですね。[JA]",
+            5:"现在是刻晴与您对话。",
+            6:"现在是优菈与您对话。",
+            Paimon_Test_Index:"现在是派蒙与您对话。"
         }
         speakername_lst = ["綾地寧々","ありはら ななみ","小茸","唐乐吟","锦木千束","刻晴","优菈"]
         # 载入config804
@@ -294,16 +294,38 @@ def operation_switch_sound(sender, message, group_id):
         config804 = f"{global_var.cwd_path}\\model\\config804.json"
         hps_ms = vits.utils.get_hparams_from_file(config804)
         for index_804, speaker_name in enumerate(hps_ms.speakers):
-            speaker_dict[Vit_804_Index + index_804] = f"现在是{speaker_name}与您对话"
+            speaker_dict[Vit_804_Index + index_804] = f"[ZH]现在是{speaker_name}与您对话。[ZH]\n[JA]今日はいい天気ですね。[JA]"
             speakername_lst.append(speaker_name)
-        speakername_lst.append("派蒙")
+        speakername_lst.append("派蒙B站")
         # 载入完毕
-    global_var.get_user_cache(history_id).needvoice = (global_var.get_user_cache(history_id).needvoice + 1) % len(speaker_dict)
-    needvoice = global_var.get_user_cache(history_id).needvoice
-    if global_var.get_user_cache(history_id).needvoice in [0,1]:
-        send_record_to_group_jp(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
-    else:
-        send_record_to_group(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
+
+    # 处理音色介绍信息
+    new_message = message
+    new_message = new_message.replace("#音色切换", "")
+    new_message = new_message.strip()
+
+    try:
+        history_id = get_history_id(group_id, sender)
+        if new_message == "":
+            needvoice = global_var.get_user_cache(history_id).needvoice
+            at_user_in_group(
+                sender, sender, f"当前激活音色:\n{speaker_dict[needvoice]}\n\n附近的10个音色:\n" + "\n".join(speakername_lst[needvoice:needvoice + 10]), group_id)
+        else:
+            for index_804, speaker_name in enumerate(global_var.speakername_lst):
+                if new_message.lower() in speaker_name.lower():
+                    global_var.get_user_cache(history_id).needvoice = Vit_804_Index + index_804
+                    needvoice = global_var.get_user_cache(history_id).needvoice
+                    if global_var.get_user_cache(history_id).needvoice in [0,1]:
+                        send_record_to_group_jp(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
+                    else:
+                        send_record_to_group(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
+                    return
+            at_user_in_group(sender, sender, "未找到匹配的音色", group_id)
+    except Exception as e:
+        send_err_to_group(sender, e, group_id)
+        return
+    # global_var.get_user_cache(history_id).needvoice = (global_var.get_user_cache(history_id).needvoice + 1) % len(speaker_dict)
+
 
 def operation_voice(sender, message, group_id):
     message = message.replace("#朗读 ","")
