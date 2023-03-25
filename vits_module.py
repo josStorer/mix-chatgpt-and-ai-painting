@@ -17,27 +17,31 @@ speaker_dict = {
     1:"在原七海",
     2:"小茸",
     3:"唐乐吟",
-    4:"chisato",
-    5:"keqing",
-    6:"eula",
+    Vit_YeFengZi_Index:"chisato",
+    Vit_YeFengZi_Index + 1:"keqing",
+    Vit_YeFengZi_Index + 2:"eula",
     Paimon_Test_Index:"paimon",
 }
 
 def get_pth_speaker_id(speakerID):
-    if speakerID <= 3:
+    if speakerID < Vit_YeFengZi_Index:
         return speakerID
+    if speakerID >= Vit_804_Index and speakerID < Paimon_Test_Index:
+        return speakerID - Vit_804_Index
     return {
-        4:0,
-        5:115,
-        6:124,
+        Vit_YeFengZi_Index:0,
+        Vit_YeFengZi_Index + 1:115,
+        Vit_YeFengZi_Index + 2:124,
         Paimon_Test_Index:0
     }[speakerID]
 
 def is_multi(speakerID):
-    return speakerID in [0,1,2,3,5,6]
+    if speakerID >= Vit_804_Index and speakerID < Paimon_Test_Index:
+        return True
+    return speakerID in [0,1,2,3,Vit_YeFengZi_Index + 1,Vit_YeFengZi_Index + 2]
 
 def get_lnnw(speakerID):
-    if speakerID <= 3 or speakerID == Paimon_Test_Index:
+    if speakerID < Vit_YeFengZi_Index or speakerID == Paimon_Test_Index:
         return 1, 0.667, 0.8
     return 1.2, 0.6, 0.668
 
@@ -105,7 +109,10 @@ def generateSound(inputString,language,speakerID = 3):
         model = f"{global_var.cwd_path}\\model\\Multi\\multi.pth"
         config = f"{global_var.cwd_path}\\model\\Multi\\config.json"
 
-    if speakerID > 3: 
+    if speakerID >= Vit_804_Index and speakerID < Paimon_Test_Index:
+        model = f"{global_var.cwd_path}\\model\\804\\804.pth"
+        config = f"{global_var.cwd_path}\\model\\config804.json"
+    elif speakerID >= Vit_YeFengZi_Index: 
     #   锦木千束
         en_name = speaker_dict[speakerID]
         model = f"{global_var.cwd_path}\\model\\{en_name}\\{en_name}.pth"
@@ -136,6 +143,7 @@ def generateSound(inputString,language,speakerID = 3):
             sf.write(audio_path,audio,samplerate=hps_ms.data.sampling_rate)
             print('Successfully saved!')
             return
+
 
     hps_ms = utils.get_hparams_from_file(config)
     n_speakers = hps_ms.data.n_speakers if is_multi(speakerID) else 0

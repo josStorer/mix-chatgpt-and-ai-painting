@@ -3,7 +3,8 @@ from utils import *
 from ws_wrapper import *
 import global_var
 
-
+speaker_dict = None
+speakername_lst = None
 def operation_general_response(sender, message, group_id):
     at_user_in_group(sender, sender,
                      "收到" + (", 我的主人, 您的消息是: " if sender == master_id else "") + message
@@ -275,17 +276,28 @@ def operation_switch_sound(sender, message, group_id):
     if not global_var.get_user_cache(history_id).needvoice:
         operation_switch_voice(sender, message, group_id)
         return
-
-    speaker_dict = {
-        0:"綾地寧々放送です",
-        1:"ありはら ななみ放送です",
-        2:"现在是小茸与您对话",
-        3:"现在是唐乐吟与您对话",
-        4:"现在是锦木千束与您对话",
-        5:"现在是刻晴与您对话",
-        6:"现在是优菈与您对话",
-        Paimon_Test_Index:"现在是派蒙与您对话"
-    }
+    global speaker_dict,speakername_lst
+    if speaker_dict is None or speakername_lst is None:
+        speaker_dict = {
+            0:"綾地寧々放送です",
+            1:"ありはら ななみ放送です",
+            2:"现在是小茸与您对话",
+            3:"现在是唐乐吟与您对话",
+            4:"现在是锦木千束与您对话",
+            5:"现在是刻晴与您对话",
+            6:"现在是优菈与您对话",
+            Paimon_Test_Index:"现在是派蒙与您对话"
+        }
+        speakername_lst = ["綾地寧々","ありはら ななみ","小茸","唐乐吟","锦木千束","刻晴","优菈"]
+        # 载入config804
+        import vits.utils
+        config804 = f"{global_var.cwd_path}\\model\\config804.json"
+        hps_ms = vits.utils.get_hparams_from_file(config804)
+        for index_804, speaker_name in enumerate(hps_ms.speakers):
+            speaker_dict[Vit_804_Index + index_804] = f"现在是{speaker_name}与您对话"
+            speakername_lst.append(speaker_name)
+        speakername_lst.append("派蒙")
+        # 载入完毕
     global_var.get_user_cache(history_id).needvoice = (global_var.get_user_cache(history_id).needvoice + 1) % len(speaker_dict)
     needvoice = global_var.get_user_cache(history_id).needvoice
     if global_var.get_user_cache(history_id).needvoice in [0,1]:

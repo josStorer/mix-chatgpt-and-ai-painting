@@ -26,7 +26,8 @@ def load_all_multi_chatgpt_prompt_base():
     global cur_multi_chatgpt_prompt_base
     for foldername, subfolders, filenames in os.walk(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}"):
         for filename in filenames:
-            with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{filename}") as f:
+            with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{filename}",
+                      "r",encoding = 'utf-8') as f:
                 group_user_modelname = filename.split('_',2)
                 cur_multi_chatgpt_prompt_base[group_user_modelname[2]] = f.read()
     return
