@@ -273,9 +273,9 @@ def operation_switch_sound(sender, message, group_id):
         return
 
     history_id = get_history_id(group_id, sender)
-    if not global_var.get_user_cache(history_id).needvoice:
-        operation_switch_voice(sender, message, group_id)
-        return
+    # if not global_var.get_user_cache(history_id).needvoice:
+    #     operation_switch_voice(sender, message, group_id)
+    #     return
     global speaker_dict,speakername_lst
     if speaker_dict is None or speakername_lst is None:
         speaker_dict = {
@@ -307,13 +307,19 @@ def operation_switch_sound(sender, message, group_id):
     try:
         history_id = get_history_id(group_id, sender)
         if new_message == "":
+            import random
             needvoice = global_var.get_user_cache(history_id).needvoice
-            at_user_in_group(
-                sender, sender, f"当前激活音色:\n{speaker_dict[needvoice]}\n\n附近的10个音色:\n" + "\n".join(speakername_lst[needvoice:needvoice + 10]), group_id)
+            b_list = range(0,len(speaker_dict) + 1)
+            if needvoice is None:
+                send_message_to_group(
+                    sender, f"[CQ:at,qq={sender}]\n为您随机推荐15个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 15)]), group_id)
+            else:
+                send_message_to_group(
+                    sender, f"[CQ:at,qq={sender}]\n当前激活音色:\n{speakername_lst[needvoice]}\n\n为您随机推荐10个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 10)]), group_id)
         else:
-            for index_804, speaker_name in enumerate(global_var.speakername_lst):
+            for index_global, speaker_name in enumerate(speakername_lst):
                 if new_message.lower() in speaker_name.lower():
-                    global_var.get_user_cache(history_id).needvoice = Vit_804_Index + index_804
+                    global_var.get_user_cache(history_id).needvoice = index_global
                     needvoice = global_var.get_user_cache(history_id).needvoice
                     if global_var.get_user_cache(history_id).needvoice in [0,1]:
                         send_record_to_group_jp(sender, f"{speaker_dict[needvoice]}", group_id, needvoice)
