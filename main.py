@@ -192,8 +192,6 @@ def chat_handler_thread(group_id, question, sender):
 
 
 def message_handler(message: str, sender, group_id):
-    if sender in auth_blacklist_id:
-        return
     if sender == bot_id:
         print(f"bot response in {group_id}: {message[:60]}...")
         if gpu_connected_msg in message:
