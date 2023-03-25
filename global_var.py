@@ -17,7 +17,8 @@ def get_user_cache(history_id):
     return user_cache[history_id]
 
 def save_cur_multi_chatgpt_prompt_base(sender,group_id,model_name,message):
-    with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{group_id}_{sender}_{model_name}","w") as f:
+    with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{group_id}_{sender}_{model_name}",
+              "w",encoding = 'utf-8') as f:
         f.write(message)
     return
 
