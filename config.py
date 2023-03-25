@@ -18,15 +18,19 @@ gpu_disconnect_notify = False
 local_mode = True
 
 shared_context = False  # 各群内所有成员共享机器人对话的上下文记录, False为每个用户独立记录对话上下文
-context_length = 10  # 对话上下文记录的长度
+context_length = 6  # 对话上下文记录的长度
 
 use_chatgpt = True  # 是否使用chatgpt, 设为True, 且billing_chatgpt = False时, 需要填写下方的邮箱和密码, 设为False时使用gpt3, 填写下方的api_key
 billing_chatgpt = True  # 是否使用计费模式的chatgpt, 使用此模式时, 同时需要将use_chatgpt设为True(或通过指令 #gpt切换), 并填写api_key, 此时不再需要账号密码, 会消耗账户余额, 但响应速度更快
 api_key = "sk-"  # openai的api key
+wait_api_key = [
+    "sk-",
+]
 email = ""  # openai的邮箱
 password = ""  # openai的密码
 
 ws_url = "ws://127.0.0.1:8080"  # 服务端的cqhttp地址
+chatglm_url = "http://127.0.0.1:8000" # 本地的ChatGLM服务地址
 gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 gpu_api_img = "/sdapi/v1/img2img"
@@ -156,8 +160,9 @@ chatgpt_prompt_base = '你是一只可爱的猫娘，而提问用户是你的主
 multi_chatgpt_prompt_base = {
   'default': chatgpt_prompt_base,
   'chatgpt': '你是AI 帮助人们回答问题。',
+  'gpt4': '', #代码中特写
 }
-    # '这些细节包括但不限于：（手慢慢地伸进裙子里面）（深呼吸）（开始加快手指的速度）（开始发出淫荡的声音）（双手托起裙子，慢慢的揉捏自己的胸部）（蹲下来将手伸进裤里）',
+
 common_chat_history = {}
 
 reg_dirty = r"VPN"
