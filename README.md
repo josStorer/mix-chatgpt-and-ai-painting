@@ -73,7 +73,7 @@ user image analysis. If this project can inspire or help you, I would be honored
 [FFmpeg依赖](https://github.com/BtbN/FFmpeg-Builds/releases/?spm=a2c6h.12873639.article-detail.4.55e41da65yk2qS)下载好之后添加[ffmpeg-master-latest-win64-gpl\bin]到系统路径[%PATH%]中
 3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到[model/chisato]目录下命名为[chisato.pth]，能调通这个就行了
 此外，这个空间下还有刻晴和优拉的模型。分别对应[model/keqing/keqing.pth]、[model/eula/eula.pth]
-[派蒙预训练语音模型] (https://github.com/JOETtheIV/VITS-Paimon)对应[model/paimon/paimon.pth]
+[派蒙预训练语音模型] (https://mega.nz/file/4f0CgBaT#Hu4h_ZhVDC6V4RaS9zUeEJJY9cniqKx911z8duPSfCw)对应[model/paimon/paimon.pth]
 [Sayashi的804个语音模型](https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/G_953000.pth)对应[model/804/804.pth]
 4. proxy相关的参数，[127.0.0.1:XXXX]，后面的端口填自己本机的
 
