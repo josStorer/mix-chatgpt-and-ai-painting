@@ -41,6 +41,14 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 4. Python版本安装3.10以内的版本,3.11在pip的时候会无法安装需要的依赖库.
 
+5. 出现'Human:', 'AI:' 这样的回答模式，应该怎么处理？
+  - 这种回答模式通常出现在Web版的使用中，需要使用[#清理对话]，防止对话模式继续污染下去。
+
+6. 设置的人设不生效是为什么？
+  - 要在[config.py]中，[use_chatgpt]和[billing_chatgpt]都设置为True，这样才会启用API模式
+  - API模式支持系统级别的角色扮演，Web模式不支持
+  - 设置gpt4人设会强制进入Web模式的对话，没有gpt3.5的账号使用gpt4可能也会成功，可能的原因是官方看你是gpt3.5的号就给你偷偷换成3.5的使用了。这里面有个风险，gpt3.5的号用web版越权申请使用gpt4，可能会被官方判风险操作导致账号被禁。
+
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开, windows一般使用windows_amd64.exe

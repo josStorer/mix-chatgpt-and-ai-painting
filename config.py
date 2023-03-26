@@ -25,7 +25,7 @@ billing_chatgpt = True  # 是否使用计费模式的chatgpt, 使用此模式时
 api_key = "sk-"  # openai的api key
 wait_api_key = [
     "sk-",
-]
+] # 需要批量查询余额的api key
 email = ""  # openai的邮箱
 password = ""  # openai的密码
 
