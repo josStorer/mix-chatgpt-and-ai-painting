@@ -22,33 +22,8 @@ project can inspire or help you, I would be honored.
 <img src="screenshots/example1.png" width="400" alt="chat example"/>
 </div>
 
-## 常见问题
-
-1. at机器人对话时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
-    - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理,
-      请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
-      邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
-2. 画图时, 机器人提示, `错误: 'images'`, 或 `错误: 404: {"detail":"Not Found"}`
-    - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包,
-      请找到相关启动文件(一般是.bat后缀),
-      找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的,
-      请找到`启用API`/`暴露API`之类的选项勾选
-3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
-    - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
-4. 本项目更新问题
-    - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
-5. go-cqhttp登录错误, 提示重试
-    - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
-6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
-    - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
-7. openai api请求提示错误, 目标计算机积极拒绝
-    - 在`main.py`内添加以下内容配置代理:
-   ``` python
-      proxy = {'http': "http://127.0.0.1:端口号", 'https': "http://127.0.0.1:端口号"}
-      openai.proxy = proxy
-   ```
-
-如有使用问题, 可加qq群283430436交流, 也可进行试玩
+## 友情链接
+有一个基于本项目修改, 添加了vits语音和图像分析能力的衍生项目: https://github.com/AGuanDao/mix-chatgpt-and-ai-painting-and-vits
 
 ## 食用方法
 
@@ -78,6 +53,34 @@ project can inspire or help you, I would be honored.
     之后自己`win+tab`新建一个桌面干别的事情,
     让你的电脑闲置时给群友玩耍吧
 11. 更多详细配置, 及服务器24小时在线模式, 查看[config.py](config.py)
+
+## 常见问题
+
+1. at机器人对话时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
+   - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理,
+     请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
+     邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
+2. 画图时, 机器人提示, `错误: 'images'`, 或 `错误: 404: {"detail":"Not Found"}`
+   - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包,
+     请找到相关启动文件(一般是.bat后缀),
+     找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的,
+     请找到`启用API`/`暴露API`之类的选项勾选
+3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
+   - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
+4. 本项目更新问题
+   - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
+5. go-cqhttp登录错误, 提示重试
+   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
+6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
+   - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
+7. openai api请求提示错误, 目标计算机积极拒绝
+   - 在`main.py`内添加以下内容配置代理:
+   ``` python
+      proxy = {'http': "http://127.0.0.1:端口号", 'https': "http://127.0.0.1:端口号"}
+      openai.proxy = proxy
+   ```
+
+如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
 ## 指令一览
 
