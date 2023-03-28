@@ -42,10 +42,10 @@ user image analysis. If this project can inspire or help you, I would be honored
 4. Python版本安装3.10以内的版本,3.11在pip的时候会无法安装需要的依赖库.
 
 5. 出现'Human:', 'AI:' 这样的回答模式，应该怎么处理？
-  - 这种回答模式通常出现在Web版的使用中，需要使用[#清理对话]，防止对话模式继续污染下去。
+  - 这种回答模式通常出现在Web版的使用中，需要使用`#清理对话`，防止对话模式继续污染下去。
 
 6. 设置的人设不生效是为什么？
-  - 要在[config.py]中，[use_chatgpt]和[billing_chatgpt]都设置为True，这样才会启用API模式
+  - 要在`config.py`中，`use_chatgpt`和`billing_chatgpt`都设置为True，这样才会启用API模式
   - API模式支持系统级别的角色扮演，Web模式不支持
   - 设置gpt4人设会强制进入Web模式的对话，没有gpt3.5的账号使用gpt4可能也会成功，可能的原因是官方看你是gpt3.5的号就给你偷偷换成3.5的使用了。这里面有个风险，gpt3.5的号用web版越权申请使用gpt4，可能会被官方判风险操作导致账号被禁。
 
@@ -77,13 +77,13 @@ user image analysis. If this project can inspire or help you, I would be honored
 
 1. 先把仓库clone下来，按照上面的步骤执行
 2. 然后安装vits相关的依赖。
-运行仓库根目录中的[安装.bat]文件
-[FFmpeg依赖](https://github.com/BtbN/FFmpeg-Builds/releases/?spm=a2c6h.12873639.article-detail.4.55e41da65yk2qS)下载好之后添加[ffmpeg-master-latest-win64-gpl\bin]到操作系统的用户环境变量[%PATH%]中
-3. 下载[錦木千束预训练语音模型] (https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到[model/chisato]目录下命名为[chisato.pth]，能调通这个就行了
-4. 此外，这个空间下还有刻晴和优拉的模型。分别对应[model/keqing/keqing.pth]、[model/eula/eula.pth]。
-5. [派蒙预训练语音模型] (https://mega.nz/file/4f0CgBaT#Hu4h_ZhVDC6V4RaS9zUeEJJY9cniqKx911z8duPSfCw)对应[model/paimon/paimon.pth]
-6. [Sayashi的804个语音模型](https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/G_953000.pth)对应[model/804/804.pth]
-7. proxy相关的参数，[127.0.0.1:XXXX]，后面的端口填自己本机的
+运行仓库根目录中的`安装.bat`文件
+[FFmpeg依赖](https://github.com/BtbN/FFmpeg-Builds/releases/?spm=a2c6h.12873639.article-detail.4.55e41da65yk2qS)下载好之后添加`ffmpeg-master-latest-win64-gpl\bin`到操作系统的用户环境变量`%PATH%`中
+3. 下载[錦木千束预训练语音模型](https://huggingface.co/spaces/yefengzi/vits-models/resolve/main/pretrained_models/chisato/chisato.pth) ，并放到`model/chisato`目录下命名为`chisato.pth`，能调通这个就行了
+4. 此外，这个空间下还有刻晴和优拉的模型。分别对应`model/keqing/keqing.pth`、`model/eula/eula.pth`。
+5. [派蒙预训练语音模型](https://mega.nz/file/4f0CgBaT#Hu4h_ZhVDC6V4RaS9zUeEJJY9cniqKx911z8duPSfCw) 对应`model/paimon/paimon.pth`
+6. [Sayashi的804个语音模型](https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/G_953000.pth) 对应`model/804/804.pth`
+7. proxy相关的参数，`127.0.0.1:XXXX`，后面的端口填自己本机的
 
 
 ## 指令一览
