@@ -28,11 +28,11 @@ def image_message_handler_thread():
                         else:
                             image, seed, prompt = gen_image(sender, gen_message, group_id)
                         if show_prompt:
-                            at_user_in_group(sender, sender,
-                                             f"prompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
+                            send_message_to_group(sender,
+                                             f"[CQ:at,qq={sender}]\nprompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
                                              group_id, bCleaned = True)
                         else:
-                            at_user_in_group(sender, sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id, bCleaned = True)
+                            send_message_to_group(sender, f"[CQ:at,qq={sender}]\nseed={seed}[CQ:image,file=base64://{image}]", group_id, bCleaned = True)
                     except Exception as e:
                         send_err_to_group(sender, e, group_id)
             else:

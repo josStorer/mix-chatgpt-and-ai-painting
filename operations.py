@@ -261,7 +261,7 @@ def operation_switch_voice(sender, message, group_id):
     history_id = get_history_id(group_id, sender)
     if not global_var.get_user_cache(history_id).needvoice:
         at_user_in_group(sender, sender, "检测到还没有开启语音对话。已开启语音对话。\n" \
-                         "提示：语音功能一共有3个指令，#语音切换，#音色切换，#朗读+[需要朗读的文案]", group_id)
+                         "提示：语音功能一共有3个指令，#语音切换，#音色，#朗读+[需要朗读的文案]", group_id)
         global_var.get_user_cache(history_id).needvoice = 4
         return
 
@@ -584,7 +584,7 @@ both_operations = {
     "#清理对话": operation_clear_chat,
     "#at切换": operation_switch_at,
     "#语音切换": operation_switch_voice,
-    "#音色切换": operation_switch_sound,
+    "#音色": operation_switch_sound,
     "#朗读": operation_voice,
     "#model": operation_switch_model,
     "#vae": operation_switch_vae,
