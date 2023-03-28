@@ -106,15 +106,15 @@ def gen_img2img(sender, gen_message, group_id):
     return image, image_info["seed"], real_payload["prompt"]
 
 
-def at_user_in_group(message_source, at_user_id, text, group_id, bCleaned = False):
+def at_user_in_group(message_source, at_user_id, text, group_id, bCleaned = False, Prefix = ""):
     # if text == "权限不足":
     #     return
     history_id = get_history_id(group_id, at_user_id)
     if global_var.get_user_cache(history_id).needvoice:
-        send_record_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id, global_var.get_user_cache(history_id).needvoice)
+        send_record_to_group(message_source, f"{Prefix}[CQ:at,qq={at_user_id}]\n{text}", group_id, global_var.get_user_cache(history_id).needvoice, Prefix = Prefix)
         return
 
-    send_message_to_group(message_source, f"[CQ:at,qq={at_user_id}]\n{text}", group_id, bCleaned)
+    send_message_to_group(message_source, f"{Prefix}[CQ:at,qq={at_user_id}]\n{text}", group_id, bCleaned)
 
 
 def send_err_to_group(message_source, e, group_id):

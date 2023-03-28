@@ -68,22 +68,22 @@ def get_chat_pair(group_id, sender):
             return chat_pair
 
 
-def chat_handler_thread(group_id, question, sender):
+def chat_handler_thread(group_id, question, sender, Prefix = ""):
     global chatbot
 
     if not is_group_online(group_id) or (gpu_disconnect_notify and not global_var.is_gpu_connected):
         if is_remote_machine():
-            at_user_in_group(sender, sender, "喵喵不在线哦~", group_id)
+            at_user_in_group(sender, sender, "喵喵不在线哦~", group_id, Prefix = Prefix)
         return
 
     if sender != master_id and not is_vip(sender):
         if is_remote_machine():
-            at_user_in_group(sender, sender, "你不是喵喵的主人哦~", group_id)
+            at_user_in_group(sender, sender, "你不是喵喵的主人哦~", group_id, Prefix = Prefix)
         return
 
     if is_user_banned(sender):
         if is_remote_machine():
-            at_user_in_group(sender, sender, "你被拉黑了喵~", group_id)
+            at_user_in_group(sender, sender, "你被拉黑了喵~", group_id, Prefix = Prefix)
         return
 
     if global_var.is_remote_machine:
@@ -96,7 +96,7 @@ def chat_handler_thread(group_id, question, sender):
         url = match.group(2)
         print (f"get user_url : {url}")
         global_var.image_gen_messages.append(({"bImg2img":True,"img_urls": [url,]}, sender, group_id, True))
-        at_user_in_group(sender, sender, "收到图片了喵~正在载入图片", group_id)
+        at_user_in_group(sender, sender, "收到图片了喵~正在载入图片", group_id, Prefix = Prefix)
         return
     ##图生图接入 end
 
@@ -182,16 +182,21 @@ def chat_handler_thread(group_id, question, sender):
     pattern = r"\[paint_prompt:\s*(.*?)\]"
     match = re.search(pattern, answer)
     if match:
-        at_user_in_group(sender, sender, re.sub(pattern, '', answer), group_id)
+        at_user_in_group(sender, sender, re.sub(pattern, '', answer), group_id, Prefix = Prefix)
         extracted_text = match.group(1)
         global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
         # send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
     else:
-        at_user_in_group(sender, sender, answer, group_id)
+        at_user_in_group(sender, sender, answer, group_id, Prefix = Prefix)
 
 
 
-def message_handler(message: str, sender, group_id):
+def message_handler(data):
+    message = data["message"]
+    sender = data["sender"]["user_id"]
+    group_id = data["group_id"]
+    nickname = data["sender"]["nickname"]
+    message_id = data["message_id"]
     if sender == bot_id:
         print(f"bot response in {group_id}: {message[:60]}...")
         if gpu_connected_msg in message:
@@ -204,13 +209,21 @@ def message_handler(message: str, sender, group_id):
         return
     print(f"get {message} from {group_id}, sender: {sender}")
 
+    # 回复引用消息
+    pattern = r"\[CQ:reply,id=(.*?)\]"
+    match = re.search(pattern, message)
+    Prefix = f"[CQ:reply,id={message_id}][CQ:at,qq={sender}] "
+    if match:
+        message = re.sub(pattern, '', message,1)
+    # 回复引用消息end
+
     if message.startswith(f'[CQ:at,qq={bot_id}]'):
         message = message.replace(f'[CQ:at,qq={bot_id}]', '')
         message = message.strip()
         if not message.startswith('#'):
-            threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
+            threading.Thread(target=chat_handler_thread, args=(group_id, message, sender, Prefix)).start()
     elif not message.startswith('#') and global_var.get_user_cache(get_history_id(group_id, sender)).b_need_at:
-        threading.Thread(target=chat_handler_thread, args=(group_id, message, sender)).start()
+        threading.Thread(target=chat_handler_thread, args=(group_id, message, sender, Prefix)).start()
 
     if message.startswith('#'):
         if is_user_banned(sender):
@@ -240,7 +253,7 @@ def on_message(self, message):
     if "post_type" in data and (data["post_type"] == "message" or data["post_type"] == "message_sent") \
             and "message_type" in data and data["message_type"] == "group" \
             and "group_id" in data:
-        message_handler(data["message"], data["sender"]["user_id"], data["group_id"])
+        message_handler(data)
     elif "status" in data and data["status"] == "ok" and "data" in data and "message_id" in data["data"]:
         global_var.last_msg_id_of_user[data["echo"]["message_source"]] = data["data"]["message_id"]
 

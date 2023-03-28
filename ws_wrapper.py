@@ -34,8 +34,8 @@ def delete_msg(msg_id):
         }
     }))
 
-def send_record_to_group(message_source, message, group_id, speakerID = 3):
-    message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
+def send_record_to_group(message_source, message, group_id, speakerID = 3, Prefix = ""):
+    message = re.sub(r'\[CQ:.*?\]', '', message).replace('\n','')
     if not message.startswith("[") and speakerID != Paimon_Test_Index:
         message = f"[ZH]{message}[ZH]"
     print(f"{message}")
@@ -55,9 +55,9 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3):
             "message_source": message_source
         }
     }))
-    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{message}", group_id)
+    send_message_to_group(message_source, f"{Prefix}[CQ:at,qq={message_source}]\n{message}", group_id)
 
-def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
+def send_record_to_group_jp(message_source, message, group_id, speakerID = 3, Prefix = ""):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
     print(f"{message}")
     generateSound(f"{message}","jp",speakerID)
@@ -76,4 +76,4 @@ def send_record_to_group_jp(message_source, message, group_id, speakerID = 3):
             "message_source": message_source
         }
     }))
-    send_message_to_group(message_source, f"[CQ:at,qq={message_source}]\n{message}", group_id)
+    send_message_to_group(message_source, f"{Prefix}[CQ:at,qq={message_source}]\n{message}", group_id)
