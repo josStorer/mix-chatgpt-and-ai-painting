@@ -161,7 +161,7 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
 
                 answer1 = response._content.decode("utf-8")
 
-                answer = answer1.replace("data: ","",1)
+                answer = answer1.replace("data: ","")
             else:
                 # gpt3.5 turbo
                 pair = get_chat_pair(group_id, sender)
