@@ -49,6 +49,9 @@ user image analysis. If this project can inspire or help you, I would be honored
   - API模式支持系统级别的角色扮演，Web模式不支持
   - 设置gpt4人设会强制进入Web模式的对话，没有gpt3.5的账号使用gpt4可能也会成功，可能的原因是官方看你是gpt3.5的号就给你偷偷换成3.5的使用了。这里面有个风险，gpt3.5的号用web版越权申请使用gpt4，可能会被官方判风险操作导致账号被禁。
 
+7. 能不能不输出文本，只输出语音？
+  - 可以，`ws_wrapper.py`中的`send_record_to_group`函数最后一行`send_message_to_group`删掉
+
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开, windows一般使用windows_amd64.exe
