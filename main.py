@@ -108,7 +108,7 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
                 chatbot = Chatbot(config={
                     "email": config.email,
                     "password": config.password,
-                    "proxy": "127.0.0.1:19180",
+                    "proxy": loc_proxy,
                     "model": global_var.admin_setGPT['model']
                 })
             chatbot.conversation_id = None
@@ -136,7 +136,7 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
                     chatbot = Chatbot(config={
                         "email": config.email,
                         "password": config.password,
-                        "proxy": "127.0.0.1:19180"
+                        "proxy": loc_proxy
                     })
                 chatbot.conversation_id = None
                 chatbot.parent_id = None
@@ -277,8 +277,8 @@ if __name__ == "__main__":
         global_var.is_remote_machine = False
         global_var.is_gpu_connected = True
         import openai
-        proxies = {'http': "127.0.0.1:19180",
-        'https': "127.0.0.1:19180"}
+        proxies = {'http': loc_proxy,
+        'https': loc_proxy}
         openai.proxy = proxies
         openai.api_key = api_key
 

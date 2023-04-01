@@ -34,6 +34,7 @@ chatglm_url = "http://127.0.0.1:8000" # 本地的ChatGLM服务地址
 gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 gpu_api_img = "/sdapi/v1/img2img"
+loc_proxy = "127.0.0.1:19180"
 
 user_database_path = "user_database" # 全部用户数据的保存路径
 user_prompt_base_path = "user_prompt_base" # 人设的保存路径
