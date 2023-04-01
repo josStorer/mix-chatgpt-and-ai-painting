@@ -301,7 +301,7 @@ def operation_switch_sound(sender, message, group_id):
 
     # 处理音色介绍信息
     new_message = message
-    new_message = new_message.replace("#音色切换", "")
+    new_message = new_message.replace("#音色", "")
     new_message = new_message.strip()
 
     try:
