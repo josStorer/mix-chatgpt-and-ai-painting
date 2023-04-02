@@ -110,6 +110,12 @@ def at_user_in_group(message_source, at_user_id, text, group_id, bCleaned = Fals
     # if text == "权限不足":
     #     return
     history_id = get_history_id(group_id, at_user_id)
+    send_message_to_group(message_source, f"{Prefix}[CQ:at,qq={at_user_id}]\n{text}", group_id, bCleaned)
+
+def at_user_in_group_with_voice(message_source, at_user_id, text, group_id, bCleaned = False, Prefix = ""):
+    # if text == "权限不足":
+    #     return
+    history_id = get_history_id(group_id, at_user_id)
     if global_var.get_user_cache(history_id).needvoice:
         send_record_to_group(message_source, f"{Prefix}[CQ:at,qq={at_user_id}]\n{text}", group_id, global_var.get_user_cache(history_id).needvoice, Prefix = Prefix)
         return

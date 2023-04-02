@@ -311,11 +311,11 @@ def operation_switch_sound(sender, message, group_id):
             needvoice = global_var.get_user_cache(history_id).needvoice
             b_list = range(0,len(speaker_dict) + 1)
             if needvoice is None:
-                send_message_to_group(
-                    sender, f"[CQ:at,qq={sender}]\n为您随机推荐15个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 15)]), group_id)
+                at_user_in_group(sender,sender,
+                    f"为您随机推荐15个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 15)]), group_id)
             else:
-                send_message_to_group(
-                    sender, f"[CQ:at,qq={sender}]\n当前激活音色:\n{speakername_lst[needvoice]}\n\n为您随机推荐10个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 10)]), group_id)
+                at_user_in_group(sender,sender,
+                    f"当前激活音色:\n{speakername_lst[needvoice]}\n\n为您随机推荐10个音色:\n" + "\n".join([speakername_lst[i] for i in random.sample(b_list, 10)]), group_id)
         else:
             for index_global, speaker_name in enumerate(speakername_lst):
                 if new_message.lower() in speaker_name.lower():

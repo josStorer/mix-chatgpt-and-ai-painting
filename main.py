@@ -28,11 +28,11 @@ def image_message_handler_thread():
                         else:
                             image, seed, prompt = gen_image(sender, gen_message, group_id)
                         if show_prompt:
-                            send_message_to_group(sender,
-                                             f"[CQ:at,qq={sender}]\nprompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
+                            at_user_in_group(sender,sender,
+                                             f"prompt={prompt}\nseed={seed}[CQ:image,file=base64://{image}]",
                                              group_id, bCleaned = True)
                         else:
-                            send_message_to_group(sender, f"[CQ:at,qq={sender}]\nseed={seed}[CQ:image,file=base64://{image}]", group_id, bCleaned = True)
+                            at_user_in_group(sender,sender, f"seed={seed}[CQ:image,file=base64://{image}]", group_id, bCleaned = True)
                     except Exception as e:
                         send_err_to_group(sender, e, group_id)
             else:
@@ -182,12 +182,12 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
     pattern = r"\[paint_prompt:\s*(.*?)\]"
     match = re.search(pattern, answer)
     if match:
-        at_user_in_group(sender, sender, re.sub(pattern, '', answer), group_id, Prefix = Prefix)
+        at_user_in_group_with_voice(sender, sender, re.sub(pattern, '', answer), group_id, Prefix = Prefix)
         extracted_text = match.group(1)
         global_var.image_gen_messages.append(({"prompt": extracted_text}, sender, group_id, True))
         # send_message_to_group(sender, f"#画图 {extracted_text}", group_id)
     else:
-        at_user_in_group(sender, sender, answer, group_id, Prefix = Prefix)
+        at_user_in_group_with_voice(sender, sender, answer, group_id, Prefix = Prefix)
 
 
 
