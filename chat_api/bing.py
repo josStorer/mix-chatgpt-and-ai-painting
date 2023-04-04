@@ -48,7 +48,8 @@ class BingAdapter:
                     if config.bing_show_references:
                         response = re.sub(r"\[(\d+)\]: ", r"\1: ", response)
                     else:
-                        response = re.sub(r"(\[\d+\]\: .+)+", "", response)
+                        response = re.sub(r"(\[\d+\]\: .+)+\n", "", response)
+                        response = re.sub(r"\[\d+\]", "", response)
                     parsed_content = response
 
                 else:
@@ -72,7 +73,7 @@ class BingAdapter:
                         return
 
                 yield parsed_content
-            print("[Bing AI 响应] " + parsed_content)
+            # print("[Bing AI 响应] " + parsed_content)
         except (RequestException, SSLError, ProxyError, MaxRetryError, HTTPStatusError, ConnectTimeout) as e:  # 网络异常
             raise e
         except Exception as e:

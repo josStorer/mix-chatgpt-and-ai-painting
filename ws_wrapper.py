@@ -38,7 +38,7 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3, Prefi
     message = re.sub(r'\[CQ:.*?\]', '', message).replace('\n','')
     if not message.startswith("[") and speakerID != Paimon_Test_Index:
         message = f"[ZH]{message}[ZH]"
-    print(f"{message}")
+    # print(f"{message}")
     generateSound(f"{message}","ch",speakerID)
     # 读取音频文件，设置采样率<default=44100>
     song = AudioSegment.from_wav(f"{global_var.cwd_path}\\output.wav").set_frame_rate(22050)
@@ -59,7 +59,7 @@ def send_record_to_group(message_source, message, group_id, speakerID = 3, Prefi
 
 def send_record_to_group_jp(message_source, message, group_id, speakerID = 3, Prefix = ""):
     message = re.sub(r'\[CQ:.*\]', '', message).replace('\n','')
-    print(f"{message}")
+    # print(f"{message}")
     generateSound(f"{message}","jp",speakerID)
     # 读取音频文件，设置采样率<default=44100>
     song = AudioSegment.from_wav(f"{global_var.cwd_path}\\output.wav").set_frame_rate(22050)
