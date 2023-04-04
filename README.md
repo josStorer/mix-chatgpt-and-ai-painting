@@ -52,6 +52,13 @@ user image analysis. If this project can inspire or help you, I would be honored
 7. 能不能不输出文本，只输出语音？
   - 可以，`ws_wrapper.py`中的`send_record_to_group`函数最后一行`send_message_to_group`删掉
 
+8. 如何获取bing-cookie？
+  - 打开开发者模式，网络抓包点doc类型
+  - 去bing.com
+  - doc抓包第一个，找到request头里的cookie
+  - 全复制过来，删掉中文项
+  - 放到config的bing_cookie字符串中
+
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开, windows一般使用windows_amd64.exe
