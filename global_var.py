@@ -10,11 +10,20 @@ class user_cache_data:
         self.chat_history = collections.deque(maxlen=config.context_length)
         self.chat_prompt_model = 'default'
 
+class user_unstore_cache_data:
+    def __init__(self) -> None:
+        self.BingAdapter = None
+
 
 def get_user_cache(history_id):
     if history_id not in user_cache:
         user_cache[history_id] = user_cache_data()
     return user_cache[history_id]
+
+def get_user_unstore_cache(history_id):
+    if history_id not in user_unstore_cache:
+        user_unstore_cache[history_id] = user_unstore_cache_data()
+    return user_unstore_cache[history_id]
 
 def save_cur_multi_chatgpt_prompt_base(sender,group_id,model_name,message):
     with open(f"{cwd_path}\\{config.user_database_path}\\{config.user_prompt_base_path}\\{group_id}_{sender}_{model_name}",
@@ -55,7 +64,7 @@ def load_all_user_data():
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, \
     is_gpu_connected, ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, billing_chatgpt, \
-    admin_setGPT, user_cache, cur_multi_chatgpt_prompt_base, common_chat_history, reg_dirty, \
+    admin_setGPT, user_cache, user_unstore_cache, cur_multi_chatgpt_prompt_base, common_chat_history, reg_dirty, \
     cwd_path
     last_msg_id_of_user = {}
     image_gen_messages = []
@@ -74,6 +83,7 @@ def init():
 
     #缓存所有用户的数据
     user_cache = load_all_user_data()
+    user_unstore_cache = {}
     admin_setGPT = {"model":"gpt-3.5-turbo"}
 
     ws = None

@@ -28,6 +28,7 @@ wait_api_key = [
 ] # 需要批量查询余额的api key
 email = ""  # openai的邮箱
 password = ""  # openai的密码
+bing_cookie = "" # newbing的cookie
 
 ws_url = "ws://127.0.0.1:8080"  # 服务端的cqhttp地址
 chatglm_url = "http://127.0.0.1:8000" # 本地的ChatGLM服务地址
@@ -35,6 +36,10 @@ gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 gpu_api_img = "/sdapi/v1/img2img"
 loc_proxy = "127.0.0.1:19180"
+bing_wss_link: str = "wss://sydney.bing.com/sydney/ChatHub"
+bing_endpoint: str = "https://edgeservices.bing.com/edgesvc/turing/conversation/create"
+bing_show_references: bool = False # bing的回答中是否显示引用
+bing_show_suggestions: bool = False # bing的回答中是否显示猜你想问
 
 user_database_path = "user_database" # 全部用户数据的保存路径
 user_prompt_base_path = "user_prompt_base" # 人设的保存路径

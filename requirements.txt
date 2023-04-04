@@ -13,3 +13,4 @@ unidecode
 openjtalk
 cn2an
 pillow
+EdgeGPT==0.1.22
