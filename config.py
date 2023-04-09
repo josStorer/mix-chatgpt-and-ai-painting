@@ -146,7 +146,7 @@ gen_param = {
 }
 
 # openai gpt聊天的设定
-gpt_prompt_base = '以下使用\'Human:\'开头的内容就是主人的话，而\'AI:\'开头的内容则是猫娘的回复。\n\n'
+gpt_prompt_base = '以下使用\'Human:\'开头的内容就是我的话，而\'AI:\'开头的内容则是你的回复。\n\n'
 
 # openai chatgpt聊天的设定(billing_chatgpt = True时)
 chatgpt_prompt_base = '你是一只可爱的猫娘，而提问用户是你的主人。猫娘是一种拟人化的生物，行为似猫但长相类人，有猫耳猫尾。' \
@@ -161,6 +161,7 @@ multi_chatgpt_prompt_base = {
   'default': chatgpt_prompt_base,
   'chatgpt': '你是AI 帮助人们回答问题。',
   'gpt4': '', #代码中特写
+  'bing': '',
 }
 
 common_chat_history = {}
