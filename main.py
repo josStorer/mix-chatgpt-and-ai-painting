@@ -51,6 +51,12 @@ def get_chat_pair(group_id, sender):
     else:
         if (not (global_var.use_chatgpt and global_var.billing_chatgpt)) or global_var.admin_setGPT['model'] == "gpt-4":
             chat_pair = ''
+            if global_var.get_user_cache(history_id).chat_prompt_model in global_var.common_chat_history:
+                for chat in global_var.common_chat_history[global_var.get_user_cache(history_id).chat_prompt_model]:
+                    for character_name in ['system','user']:
+                        if character_name in chat:
+                            chat_pair += 'Human:' + chat[character_name] + '\n'
+                    chat_pair += 'AI:' + chat['answer'] + '\n'
             for chat in global_var.get_user_cache(history_id).chat_history:
                 chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
             return chat_pair
@@ -151,7 +157,7 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
 
     elif not global_var.use_chatgpt:
         try:
-            chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+            chat_prompt = global_var.cur_multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model] + gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
             completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
                                                   timeout=api_timeout, stop=['Human:', 'AI:'])
             answer = completion.choices[0].text
@@ -169,7 +175,7 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
                     })
                 chatbot.conversation_id = None
                 chatbot.parent_id = None
-                chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+                chat_prompt = global_var.cur_multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model] + gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
                 for data in chatbot.ask(chat_prompt, None, None, api_timeout):
                     answer = data["message"]
             elif global_var.admin_setGPT['model'] == "glm":
