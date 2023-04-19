@@ -2,9 +2,9 @@ import asyncio
 from typing import Generator
 from requests.exceptions import SSLError, ProxyError, RequestException
 from urllib3.exceptions import MaxRetryError
-from httpx import HTTPStatusError, ConnectTimeout
+from httpx import HTTPStatusError, ConnectTimeout, ConnectError
 
-from EdgeGPT import Chatbot as EdgeChatbot, ConversationStyle
+from EdgeGPT import Chatbot as EdgeChatbot, ConversationStyle, NotAllowedToAccess
 
 import re
 import config
@@ -26,8 +26,17 @@ class BingAdapter:
         for line in config.bing_cookie.split("; "):
             name, value = line.split("=", 1)
             self.cookieData.append({"name": name, "value": value})
-
-        self.bot = EdgeChatbot(cookies=self.cookieData, proxy= "http://" + config.loc_proxy)
+        while True:
+            try:
+                if config.need_loc_proxy:
+                    self.bot = EdgeChatbot(cookies=self.cookieData, proxy= "http://" + config.loc_proxy)
+                else:
+                    self.bot = EdgeChatbot(cookies=self.cookieData)
+                break;
+            except ConnectError as e:
+                continue
+            except Exception as e:
+                break
 
     async def rollback(self):
         raise "BotOperationNotSupportedException"
@@ -74,8 +83,13 @@ class BingAdapter:
 
                 yield parsed_content
             # print("[Bing AI 响应] " + parsed_content)
-        except (RequestException, SSLError, ProxyError, MaxRetryError, HTTPStatusError, ConnectTimeout) as e:  # 网络异常
-            raise e
+        except NotAllowedToAccess as e:
+            yield "Bing 服务需要重新认证。"
+            await self.on_reset()
+            return 
+        except (RequestException, SSLError, ProxyError, MaxRetryError, HTTPStatusError, ConnectTimeout, ConnectError) as e:  # 网络异常
+            yield self.ask(prompt)
+            return
         except Exception as e:
             yield "Bing 已结束本次会话。继续发送消息将重新开启一个新会话。"
             await self.on_reset()

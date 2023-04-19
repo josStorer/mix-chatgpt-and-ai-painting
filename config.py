@@ -35,7 +35,8 @@ chatglm_url = "http://127.0.0.1:8000" # 本地的ChatGLM服务地址
 gpu_url = "http://127.0.0.1:7860"  # 本地stable diffusion webui服务地址
 gpu_api_path = "/sdapi/v1/txt2img"  # 本地stable diffusion webui的API路径
 gpu_api_img = "/sdapi/v1/img2img"
-loc_proxy = "127.0.0.1:19180"
+need_loc_proxy = True # 是否使用代理
+loc_proxy = "127.0.0.1:19180" # 当需要代理 need_loc_proxy = True 时生效
 bing_wss_link: str = "wss://sydney.bing.com/sydney/ChatHub"
 bing_endpoint: str = "https://edgeservices.bing.com/edgesvc/turing/conversation/create"
 bing_show_references: bool = False # bing的回答中是否显示引用

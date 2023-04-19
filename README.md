@@ -53,10 +53,10 @@ user image analysis. If this project can inspire or help you, I would be honored
   - 可以，`ws_wrapper.py`中的`send_record_to_group`函数最后一行`send_message_to_group`删掉
 
 8. 如何获取bing-cookie？
-  1. 去bing.com
+  - 方法1 去bing.com
   - 打开开发者模式的console控制台
   - 输入document.cookie
-  2. 打开开发者模式，网络抓包点doc类型
+  - 方法2 打开开发者模式，网络抓包点doc类型
   - 去bing.com
   - doc抓包第一个，找到request头里的cookie
   - 全复制过来，删掉中文项

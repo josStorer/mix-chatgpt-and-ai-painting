@@ -111,12 +111,14 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
     or global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model == "gpt4":
         try:
             if not chatbot:
-                chatbot = Chatbot(config={
+                config_book = {
                     "email": config.email,
                     "password": config.password,
-                    "proxy": loc_proxy,
                     "model": global_var.admin_setGPT['model']
-                })
+                }
+                if need_loc_proxy:
+                    config_book["proxy"] = loc_proxy
+                chatbot = Chatbot(config=config_book)
             chatbot.conversation_id = None
             chatbot.parent_id = None
             # chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
@@ -168,11 +170,13 @@ def chat_handler_thread(group_id, question, sender, Prefix = ""):
         try:
             if not global_var.billing_chatgpt:
                 if not chatbot:
-                    chatbot = Chatbot(config={
+                    config_book = {
                         "email": config.email,
                         "password": config.password,
-                        "proxy": loc_proxy
-                    })
+                    }
+                    if need_loc_proxy:
+                        config_book["proxy"] = loc_proxy
+                    chatbot = Chatbot(config=config_book)
                 chatbot.conversation_id = None
                 chatbot.parent_id = None
                 chat_prompt = global_var.cur_multi_chatgpt_prompt_base[global_var.get_user_cache(get_history_id(group_id, sender)).chat_prompt_model] + gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
@@ -312,9 +316,12 @@ if __name__ == "__main__":
         global_var.is_remote_machine = False
         global_var.is_gpu_connected = True
         import openai
-        proxies = {'http': loc_proxy,
-        'https': loc_proxy}
-        openai.proxy = proxies
+        if need_loc_proxy:
+            proxies = {
+                'http': loc_proxy,
+                'https': loc_proxy
+            }
+            openai.proxy = proxies
         openai.api_key = api_key
 
     websocket.enableTrace(False)
