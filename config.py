@@ -36,7 +36,7 @@ gpu_url = "http://127.0.0.1:7860"  # stable diffusion webui服务地址, 可以�
 gpu_api_path = "/sdapi/v1/txt2img"  # stable diffusion webui的绘画API路径, 一般保持默认即可
 
 working_groups = {123, 456}  # 默认启用机器人的群号, 仍可通过在群内使用 #上线 指令主动添加
-master_id = 123456  # 机器人拥有者qq号
+master_id = {123, 456}  # 机器人拥有者qq号或频道id, 要获取频道id请启动机器人后发一条消息, 查看控制台显示的sender:后的数字, 就是你的频道id, 频道内使用必须手动输入 #上线
 bot_id = 789  # 机器人自身的qq号
 
 auth_vip_for_all = False  # 所有人都视作vip用户, 能够调用openai

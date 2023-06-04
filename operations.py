@@ -4,36 +4,36 @@ from ws_wrapper import *
 import global_var
 
 
-def operation_general_response(sender, message, group_id):
+def operation_general_response(sender, message, group_id, channel_id, is_guild):
     at_user_in_group(sender, sender,
-                     "收到" + (", 我的主人, 您的消息是: " if sender == master_id else "") + message
+                     "收到" + (", 我的主人, 您的消息是: " if sender in master_id else "") + message
                      .replace("&#91;", "[")
-                     .replace("&#93;", "]"), group_id)
+                     .replace("&#93;", "]"), group_id, channel_id, is_guild)
 
 
-def operation_set_online(sender, _, group_id):
-    if sender == master_id or sender in auth_set_online_id:
+def operation_set_online(sender, _, group_id, channel_id, is_guild):
+    if sender in master_id or sender in auth_set_online_id:
         working_groups.add(group_id)
         if is_remote_machine():
             global_var.is_gpu_connected = True
             global_var.gpu_connect_confirm_timer.reset()
-            at_user_in_group(sender, sender, "主人, 我已上线", group_id)
+            at_user_in_group(sender, sender, "主人, 我已上线", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_set_offline(sender, _, group_id):
-    if sender == master_id or sender in auth_set_offline_id:
+def operation_set_offline(sender, _, group_id, channel_id, is_guild):
+    if sender in master_id or sender in auth_set_offline_id:
         working_groups.remove(group_id)
         if is_remote_machine():
-            at_user_in_group(sender, sender, "再见, 主人QAQ", group_id)
+            at_user_in_group(sender, sender, "再见, 主人QAQ", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_gen_image(sender, message, group_id):
+def operation_gen_image(sender, message, group_id, channel_id, is_guild):
     new_message = message
     if new_message.startswith("#d"):
         if is_vip(sender):
@@ -43,28 +43,28 @@ def operation_gen_image(sender, message, group_id):
                 if is_not_remote_machine():
                     at_user_in_group(sender, sender,
                                      f"尊贵的vip用户, 检测到您已进行了py交易, 支持使用额外指令, 现已为您{start_gen_tag_msg}",
-                                     group_id)
+                                     group_id, channel_id, is_guild)
         else:
             if is_remote_machine():
-                operation_general_response(sender, message, group_id)
+                operation_general_response(sender, message, group_id, channel_id, is_guild)
             return
     else:
         if is_group_online(group_id):
             global_var.gpu_connect_confirm_timer.run()
             if is_not_remote_machine():
-                at_user_in_group(sender, sender, f"收到, {start_gen_tag_msg}", group_id)
+                at_user_in_group(sender, sender, f"收到, {start_gen_tag_msg}", group_id, channel_id, is_guild)
 
     new_message = new_message.replace(paint_command_msg, "")
     new_message = new_message.strip()
     if len(new_message) == 0:
-        global_var.image_gen_messages.append(({}, sender, group_id, False))
+        global_var.image_gen_messages.append(({}, sender, group_id, channel_id, is_guild, False))
     elif new_message[0] == '{':
         try:
             obj = json.loads(new_message)
-            global_var.image_gen_messages.append((obj, sender, group_id, False))
+            global_var.image_gen_messages.append((obj, sender, group_id, channel_id, is_guild, False))
         except Exception as e:
             if is_remote_machine():
-                send_err_to_group(sender, e, group_id)
+                send_err_to_group(sender, e, group_id, channel_id, is_guild)
     else:
         try:
             res = new_message.replace(";", ".").split('.', 3)
@@ -93,18 +93,19 @@ def operation_gen_image(sender, message, group_id):
             if h is not None and len(h) != 0:
                 gen_message["height"] = int(h)
 
-            global_var.image_gen_messages.append((gen_message, sender, group_id, False))
+            global_var.image_gen_messages.append((gen_message, sender, group_id, channel_id, is_guild, False))
         except Exception as e:
             if is_remote_machine():
-                send_err_to_group(sender, e, group_id)
+                send_err_to_group(sender, e, group_id, channel_id, is_guild)
 
 
-def operation_delete_msg(sender, _, group_id):
-    delete_msg(global_var.last_msg_id_of_user[sender])
+def operation_delete_msg(sender, _, group_id, channel_id, is_guild):
+    if not is_guild:
+        delete_msg(global_var.last_msg_id_of_user[sender])
 
 
-def operation_help(sender, _, group_id):
-    send_message_to_group(sender, f'''机器人使用说明:
+def operation_help(sender, _, group_id, channel_id, is_guild):
+    at_user_in_group(sender, sender, f'''机器人使用说明:
 #消息
  - 支持转换CQ消息原始数据, 外网服务器可借此拉取外网资源
 
@@ -125,124 +126,124 @@ def operation_help(sender, _, group_id):
 
 #默认
  - 查看画图的默认配置
-''', group_id)
+''', group_id, channel_id, is_guild)
 
 
-def operation_default_config(sender, _, group_id):
-    send_message_to_group(sender, json.dumps(default_gen, indent=2), group_id)
+def operation_default_config(sender, _, group_id, channel_id, is_guild):
+    at_user_in_group(sender, sender, json.dumps(default_gen, indent=2), group_id, channel_id, is_guild)
 
 
-def operation_set_banned(sender, message, group_id):
-    if sender == master_id or sender in auth_ban_id:
+def operation_set_banned(sender, message, group_id, channel_id, is_guild):
+    if sender in master_id or sender in auth_ban_id:
         new_message = message.replace("#拉黑", "")
         user = int(new_message)
-        if user != master_id:
+        if user not in master_id:
             global_var.banned_user_id.add(user)
             if is_remote_machine():
-                at_user_in_group(sender, sender, "拉黑成功", group_id)
+                at_user_in_group(sender, sender, "拉黑成功", group_id, channel_id, is_guild)
         else:
             if is_remote_machine():
-                at_user_in_group(sender, sender, "我怎么可能拉黑我最爱的主人呢???!!!", group_id)
+                at_user_in_group(sender, sender, "我怎么可能拉黑我最爱的主人呢???!!!", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_remove_banned(sender, message, group_id):
-    if sender == master_id or sender in auth_ban_id:
+def operation_remove_banned(sender, message, group_id, channel_id, is_guild):
+    if sender in master_id or sender in auth_ban_id:
         new_message = message.replace("#解除", "")
         user = int(new_message)
         global_var.banned_user_id.remove(user)
         if is_remote_machine():
-            at_user_in_group(sender, sender, "解除黑名单成功", group_id)
+            at_user_in_group(sender, sender, "解除黑名单成功", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_show_blacklist(sender, _, group_id):
-    if sender == master_id or sender in auth_blacklist_id:
-        at_user_in_group(sender, sender, "黑名单:\n" + str(global_var.banned_user_id), group_id)
+def operation_show_blacklist(sender, _, group_id, channel_id, is_guild):
+    if sender in master_id or sender in auth_blacklist_id:
+        at_user_in_group(sender, sender, "黑名单:\n" + str(global_var.banned_user_id), group_id, channel_id, is_guild)
     else:
-        at_user_in_group(sender, sender, "权限不足", group_id)
+        at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_add_vip(sender, message, group_id):
-    if sender == master_id:
+def operation_add_vip(sender, message, group_id, channel_id, is_guild):
+    if sender in master_id:
         new_message = message.replace("#vip", "")
         user = int(new_message)
         global_var.auth_vip_id.add(user)
         if is_remote_machine():
-            at_user_in_group(sender, sender, f"新增vip: {user}", group_id)
+            at_user_in_group(sender, sender, f"新增vip: {user}", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_remove_vip(sender, message, group_id):
-    if sender == master_id:
+def operation_remove_vip(sender, message, group_id, channel_id, is_guild):
+    if sender in master_id:
         new_message = message.replace("#unvip", "")
         user = int(new_message)
         global_var.auth_vip_id.remove(user)
         if is_remote_machine():
-            at_user_in_group(sender, sender, f"移除vip: {user}", group_id)
+            at_user_in_group(sender, sender, f"移除vip: {user}", group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_switch_gpt(sender, _, group_id):
-    if sender == master_id:
+def operation_switch_gpt(sender, _, group_id, channel_id, is_guild):
+    if sender in master_id:
         global_var.use_chatgpt = not global_var.use_chatgpt
         print("use_chatgpt:", global_var.use_chatgpt)
         if is_not_remote_machine():
             at_user_in_group(sender, sender, "已切换至chatGPT" if global_var.use_chatgpt else (
-                "已切换至自托管模型" if config.use_selfhostedllm else "已切换至GPT3"), group_id)
+                "已切换至自托管模型" if config.use_selfhostedllm else "已切换至GPT3"), group_id, channel_id, is_guild)
     else:
         if is_remote_machine():
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
 
 
-def operation_clear_chat(sender, _, group_id):
+def operation_clear_chat(sender, _, group_id, channel_id, is_guild):
     if global_var.is_remote_machine:
         return
 
     history_id = get_sender_key_in_group(group_id, sender)
     if history_id not in global_var.chat_history:
-        at_user_in_group(sender, sender, "没有可以清理的对话", group_id)
+        at_user_in_group(sender, sender, "没有可以清理的对话", group_id, channel_id, is_guild)
         return
 
     if shared_context:
-        if sender == master_id:
+        if sender in master_id:
             global_var.chat_history[history_id].clear()
-            at_user_in_group(sender, sender, "已清理群内共享对话上下文", group_id)
+            at_user_in_group(sender, sender, "已清理群内共享对话上下文", group_id, channel_id, is_guild)
         else:
-            at_user_in_group(sender, sender, "权限不足", group_id)
+            at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
     else:
         global_var.chat_history[history_id].clear()
-        at_user_in_group(sender, sender, "已清理你的对话上下文", group_id)
+        at_user_in_group(sender, sender, "已清理你的对话上下文", group_id, channel_id, is_guild)
 
 
-def operation_switch_at_mode(sender, _, group_id):
+def operation_switch_at_mode(sender, _, group_id, channel_id, is_guild):
     if global_var.is_remote_machine:
         return
 
     sender_key = get_sender_key_in_group(group_id, sender)
     if sender_key not in global_var.users_not_need_at:
         global_var.users_not_need_at[sender_key] = True
-        at_user_in_group(sender, sender, "你已无需at即可对话", group_id)
+        at_user_in_group(sender, sender, "你已无需at即可对话", group_id, channel_id, is_guild)
         return
 
     del global_var.users_not_need_at[sender_key]
-    at_user_in_group(sender, sender, "你已恢复到需要at机器人再进行对话", group_id)
+    at_user_in_group(sender, sender, "你已恢复到需要at机器人再进行对话", group_id, channel_id, is_guild)
 
 
-def operation_switch_model(sender, message, group_id):
+def operation_switch_model(sender, message, group_id, channel_id, is_guild):
     if global_var.is_remote_machine:
         return
 
-    if sender != master_id:
-        at_user_in_group(sender, sender, "权限不足", group_id)
+    if sender not in master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
         return
 
     new_message = message.replace("#model", "")
@@ -253,7 +254,7 @@ def operation_switch_model(sender, message, group_id):
     if response.status_code == 200:
         models = [model["title"] for model in response.json()]
     else:
-        at_user_in_group(sender, sender, "获取模型列表失败", group_id)
+        at_user_in_group(sender, sender, "获取模型列表失败", group_id, channel_id, is_guild)
         return
 
     try:
@@ -261,26 +262,27 @@ def operation_switch_model(sender, message, group_id):
         if new_message == "":
             at_user_in_group(
                 sender, sender,
-                f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id)
+                f"当前激活模型:\n{options['sd_model_checkpoint']}\n\n当前可用模型:\n" + "\n".join(models), group_id,
+                channel_id, is_guild)
         else:
             for model_title in models:
                 if new_message.lower() in model_title.lower():
                     options['sd_model_checkpoint'] = model_title
                     requests.post(f"{gpu_url}/sdapi/v1/options", json=options)
-                    at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id)
+                    at_user_in_group(sender, sender, f"已切换至模型:\n{model_title}", group_id, channel_id, is_guild)
                     return
-            at_user_in_group(sender, sender, "未找到匹配的模型", group_id)
+            at_user_in_group(sender, sender, "未找到匹配的模型", group_id, channel_id, is_guild)
     except Exception as e:
-        send_err_to_group(sender, e, group_id)
+        send_err_to_group(sender, e, group_id, channel_id, is_guild)
         return
 
 
-def operation_switch_vae(sender, message, group_id):
+def operation_switch_vae(sender, message, group_id, channel_id, is_guild):
     if global_var.is_remote_machine:
         return
 
-    if sender != master_id:
-        at_user_in_group(sender, sender, "权限不足", group_id)
+    if sender not in master_id:
+        at_user_in_group(sender, sender, "权限不足", group_id, channel_id, is_guild)
         return
 
     new_message = message.replace("#vae", "")
@@ -289,7 +291,7 @@ def operation_switch_vae(sender, message, group_id):
     try:
         options = requests.get(f"{gpu_url}/sdapi/v1/options").json()
         if new_message == "":
-            at_user_in_group(sender, sender, f"当前激活VAE:\n{options['sd_vae']}", group_id)
+            at_user_in_group(sender, sender, f"当前激活VAE:\n{options['sd_vae']}", group_id, channel_id, is_guild)
         else:
             old_vae = options['sd_vae']
             options['sd_vae'] = new_message
@@ -297,13 +299,13 @@ def operation_switch_vae(sender, message, group_id):
             at_user_in_group(
                 sender, sender,
                 f"已尝试切换VAE, 注意VAE切换必须准确匹配名称\n如果出现效果异常, 可能是切换错误\n可切换回先前的VAE:\n{old_vae}",
-                group_id)
+                group_id, channel_id, is_guild)
     except Exception as e:
-        send_err_to_group(sender, e, group_id)
+        send_err_to_group(sender, e, group_id, channel_id, is_guild)
         return
 
 
-def operation_show_balance(sender, _, group_id):
+def operation_show_balance(sender, _, group_id, channel_id, is_guild):
     if global_var.is_remote_machine:
         return
 
@@ -313,9 +315,9 @@ def operation_show_balance(sender, _, group_id):
     })
 
     if response.status_code == 200:
-        at_user_in_group(sender, sender, response.text, group_id)
+        at_user_in_group(sender, sender, response.text, group_id, channel_id, is_guild)
     else:
-        at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id)
+        at_user_in_group(sender, sender, "查询失败:\n" + response.text, group_id, channel_id, is_guild)
 
 
 both_operations = {

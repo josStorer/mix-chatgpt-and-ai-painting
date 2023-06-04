@@ -4,7 +4,7 @@ from utils import ResettableTimer
 
 def init():
     global last_msg_id_of_user, image_gen_messages, is_remote_machine, banned_user_id, is_gpu_connected
-    global ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, chat_history, users_not_need_at
+    global ws, gpu_connect_confirm_timer, auth_vip_id, use_chatgpt, chat_history, users_not_need_at, guild_bot_id
     last_msg_id_of_user = {}
     image_gen_messages = []
     is_remote_machine = False
@@ -14,6 +14,7 @@ def init():
     use_chatgpt = config.use_chatgpt
     chat_history = {}
     users_not_need_at = {}
+    guild_bot_id = 0
 
     ws = None
 

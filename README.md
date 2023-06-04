@@ -29,7 +29,8 @@ project can inspire or help you, I would be honored.
 
 ## 配合离线LLM使用方法
 
-从[selfhostedAI](https://github.com/josStorer/selfhostedAI)中任选一个项目启动API (我仅测试了[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，推荐使用)
+从[selfhostedAI](https://github.com/josStorer/selfhostedAI)中任选一个项目启动API (
+我仅测试了[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，推荐使用)
 
 接着在[config.py](config.py)内，将use_selfhostedllm设为True，此时使用 #gpt切换，切换为原本的GPT3模式，就会调用本地模型
 
@@ -39,7 +40,7 @@ project can inspire or help you, I would be honored.
    windows一般使用windows_amd64.exe
 2. 启动cmd窗口, 打开到go-cqhttp所在路径, 然后通过命令行输入程序名启动, 并选择正向websocket模式
 3. 扫码登录你的qq机器人, 如果提示协议不支持扫码, 可以打开device.json文件, 将protocol改为2, 如果提示账号被风控, 发送失败,
-   尝试使用协议3, 更稳定
+   尝试使用协议3, 更稳定, 如果需要使用QQ频道, 请用协议5
 4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装依赖,
    该项目也提供了不同系统的一键安装脚本,
    如果你是从源代码安装, 可参考https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running,
@@ -50,7 +51,8 @@ project can inspire or help you, I would be honored.
 6. 启动stable-diffusion-webui,
    可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
    也可参考[sd_webui.bat](sd_webui.bat), 如果所有依赖安装正常, 可以直接用webui.py启动, 如
-   `python webui.py --medvram --deepdanbooru --xformers --api --enable-insecure-extension-access`, 注意必须带有`--api`参数, 如果你使用的是他人的整合包,
+   `python webui.py --medvram --deepdanbooru --xformers --api --enable-insecure-extension-access`, 注意必须带有`--api`
+   参数, 如果你使用的是他人的整合包,
    可能需要自己手动在启动脚本加上`--api`参数, 参考上面的`常见问题`一栏
 7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
