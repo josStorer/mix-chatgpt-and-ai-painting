@@ -27,6 +27,12 @@ project can inspire or help you, I would be honored.
 有一个基于本项目修改,
 添加了vits语音和图像分析能力的衍生项目: https://github.com/AGuanDao/mix-chatgpt-and-ai-painting-and-vits
 
+## 配合离线LLM使用方法
+
+从[selfhostedAI](https://github.com/josStorer/selfhostedAI)中任选一个项目启动API (我仅测试了[RWKV-Runner](https://github.com/josStorer/RWKV-Runner)，推荐使用)
+
+接着在[config.py](config.py)内，将use_selfhostedllm设为True，此时使用 #gpt切换，切换为原本的GPT3模式，就会调用本地模型
+
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开,
@@ -44,7 +50,7 @@ project can inspire or help you, I would be honored.
 6. 启动stable-diffusion-webui,
    可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
    也可参考[sd_webui.bat](sd_webui.bat), 如果所有依赖安装正常, 可以直接用webui.py启动, 如
-   `python webui.py --medvram --deepdanbooru --xformers --api`, 注意必须带有`--api`参数, 如果你使用的是他人的整合包,
+   `python webui.py --medvram --deepdanbooru --xformers --api --enable-insecure-extension-access`, 注意必须带有`--api`参数, 如果你使用的是他人的整合包,
    可能需要自己手动在启动脚本加上`--api`参数, 参考上面的`常见问题`一栏
 7. 克隆本项目, `git clone https://github.com/josStorer/mix-chatgpt-and-ai-painting`, 并`pip install -r requirements.txt`
    安装依赖
