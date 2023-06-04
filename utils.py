@@ -8,7 +8,7 @@ import global_var
 
 
 def is_group_online(group_id):
-    return group_id in working_groups
+    return int(group_id) in working_groups
 
 
 def is_user_banned(user_id):
