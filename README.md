@@ -23,20 +23,23 @@ project can inspire or help you, I would be honored.
 </div>
 
 ## 友情链接
-有一个基于本项目修改, 添加了vits语音和图像分析能力的衍生项目: https://github.com/AGuanDao/mix-chatgpt-and-ai-painting-and-vits
+
+有一个基于本项目修改,
+添加了vits语音和图像分析能力的衍生项目: https://github.com/AGuanDao/mix-chatgpt-and-ai-painting-and-vits
 
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开,
    windows一般使用windows_amd64.exe
 2. 启动cmd窗口, 打开到go-cqhttp所在路径, 然后通过命令行输入程序名启动, 并选择正向websocket模式
-3. 扫码登录你的qq机器人
+3. 扫码登录你的qq机器人, 如果提示协议不支持扫码, 可以打开device.json文件, 将protocol改为2, 如果提示账号被风控, 发送失败,
+   尝试使用协议3, 更稳定
 4. 下载[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), 并安装依赖,
    该项目也提供了不同系统的一键安装脚本,
    如果你是从源代码安装, 可参考https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running,
    如果你下载的是他人的整合包, 可略过
 5. 从huggingface下载模型权重,
-   如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [Chilloutmix](https://huggingface.co/TASUKU2023/Chilloutmix/tree/main), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
+   如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [MixPro](https://civitai.com/models/14206), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models/Stable-diffusion`目录下
 6. 启动stable-diffusion-webui,
    可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
@@ -57,28 +60,30 @@ project can inspire or help you, I would be honored.
 ## 常见问题
 
 1. at机器人对话时, 本程序出现`AttributeError: 'Error' object has no attribute 'message'`
-   - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理,
-     请在[main.py#L101](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L101)
-     邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
+    - 一般是填写账号密码登陆openai的登陆错误, 如果你有代理,
+      请在[main.py#L119](https://github.com/josStorer/mix-chatgpt-and-ai-painting/blob/master/main.py#L119)
+      邮箱密码后添加`"proxy": "你的代理地址"`, 如果你没有代理, 请将`use_chatgpt`设为`False`, 并填写`api_key`
 2. 画图时, 机器人提示, `错误: 'images'`, 或 `错误: 404: {"detail":"Not Found"}`
-   - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包,
-     请找到相关启动文件(一般是.bat后缀),
-     找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的,
-     请找到`启用API`/`暴露API`之类的选项勾选
+    - 是Stable Diffusion WebUI没有暴露api, 你需要在启动时, 额外输入`--api`参数, 如果你使用的是他人的整合包,
+      请找到相关启动文件(一般是.bat后缀),
+      找到其中有参数的一行, 如`--deepdanbooru`, `--xformers`, 在后面加上一个`--api`, 注意参数间空格, 如果有启动器的,
+      请找到`启用API`/`暴露API`之类的选项勾选
 3. at机器人对话时, 机器人提示, `错误: [WinError 3] The system cannot find the path specified`
-   - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
+    - 需要设置你系统的环境变量, 设置`HOME`环境变量为某个文件夹路径, 用于存储配置信息
 4. 本项目更新问题
-   - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
+    - 使用`git pull`拉取本项目的更新, 并注意使用`pip install -r requirements.txt --upgrade`升级依赖库
 5. go-cqhttp登录错误, 提示重试
-   - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
+    - 启动cqhttp后, 在同目录下, 找到`device.json`, 打开并找到`protocol`, 将值改为`2`, 并重新启动程序登录
 6. WebSocketApp.run_forever() got an unexpected keyword argument 'reconnect'
-   - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
+    - 在`main.py`末尾, 找到`run_forever`, 把括号内的`reconnect=3`删掉
 7. openai api请求提示错误, 目标计算机积极拒绝
-   - 在`main.py`内添加以下内容配置代理:
+    - 在`main.py`内添加以下内容配置代理:
    ``` python
       proxy = {'http': "http://127.0.0.1:端口号", 'https': "http://127.0.0.1:端口号"}
       openai.proxy = proxy
    ```
+8. #model 和 #vae 查询与切换失败
+    - 启动时, 传入 --enable-insecure-extension-access 参数
 
 如有使用问题, 可加qq群283430436交流, 也可进行试玩
 
