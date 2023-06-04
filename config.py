@@ -20,11 +20,16 @@ local_mode = True
 shared_context = False  # 各群内所有成员共享机器人对话的上下文记录, False为每个用户独立记录对话上下文
 context_length = 6  # 对话上下文记录的长度
 
+use_selfhostedllm = True  # 是否使用离线自托管大语言模型, 此选项开启时将覆盖GPT3模式, 仍可使用 #gpt切换 进入chatgpt模式
+selfhostedllm_url = "http://127.0.0.1:8000/v1/chat/completions"  # 自托管大语言模型的本地api接口地址
+
 use_chatgpt = True  # 是否使用chatgpt, 设为True, 且billing_chatgpt = False时, 需要填写下方的邮箱和密码, 设为False时使用gpt3, 填写下方的api_key
 billing_chatgpt = True  # 是否使用计费模式的chatgpt, 使用此模式时, 同时需要将use_chatgpt设为True(或通过指令 #gpt切换), 并填写api_key, 此时不再需要账号密码, 会消耗账户余额, 但响应速度更快
 api_key = "sk-"  # openai的api key
 email = ""  # openai的邮箱
 password = ""  # openai的密码
+
+proxy = ""  # openai api请求代理 example: http://127.0.0.1:8889
 
 ws_url = "ws://127.0.0.1:8080"  # cqhttp地址, 可以是本地, 也可以是远程
 gpu_url = "http://127.0.0.1:7860"  # stable diffusion webui服务地址, 可以是本地, 也可以是远程

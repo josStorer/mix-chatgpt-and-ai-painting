@@ -50,7 +50,7 @@ def get_chat_pair(group_id, sender):
     if len(global_var.chat_history[history_id]) == 0:
         return ''
     else:
-        if not global_var.use_chatgpt:
+        if not global_var.use_chatgpt and not config.use_selfhostedllm:
             chat_pair = ''
             for chat in global_var.chat_history[history_id]:
                 chat_pair += 'Human:' + chat['question'] + '\nAI:' + chat['answer'] + '\n'
@@ -87,10 +87,24 @@ def chat_handler_thread(group_id, question, sender):
     answer = ""
     if not global_var.use_chatgpt:
         try:
-            chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
-            completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
-                                                  timeout=api_timeout, stop=['Human:', 'AI:'])
-            answer = completion.choices[0].text
+            if use_selfhostedllm:
+                pair = get_chat_pair(group_id, sender)
+                chat_prompt = (pair if pair else [])
+                chat_prompt.insert(0, {"role": "system", "content": chatgpt_prompt_base})
+                chat_prompt.append({"role": "user", "content": question})
+                resp = requests.post(config.selfhostedllm_url, json={
+                    "messages": chat_prompt,
+                })
+                resp_json = resp.json()
+                if "response" in resp_json:
+                    answer = resp_json["response"]
+                else:
+                    answer = resp_json["choices"][0]["message"]["content"]
+            else:
+                chat_prompt = gpt_prompt_base + get_chat_pair(group_id, sender) + 'Human:' + question + '\nAI:'
+                completion = openai.Completion.create(engine="text-davinci-003", prompt=chat_prompt, max_tokens=500,
+                                                      timeout=api_timeout, stop=['Human:', 'AI:'])
+                answer = completion.choices[0].text
         except Exception as e:
             send_err_to_group(sender, e, group_id)
             return
@@ -100,7 +114,8 @@ def chat_handler_thread(group_id, question, sender):
                 if not chatbot:
                     chatbot = Chatbot(config={
                         "email": config.email,
-                        "password": config.password
+                        "password": config.password,
+                        "proxy": config.proxy if config.proxy else None,
                     })
                 chatbot.conversation_id = None
                 chatbot.parent_id = None
@@ -205,6 +220,10 @@ if __name__ == "__main__":
         global_var.is_remote_machine = False
         global_var.is_gpu_connected = True
         import openai
+
+        if config.proxy:
+            proxy = {'http': config.proxy, 'https': config.proxy}
+            openai.proxy = config.proxy
 
         openai.api_key = api_key
 

@@ -1,3 +1,4 @@
+import config
 from utils import *
 from ws_wrapper import *
 import global_var
@@ -195,7 +196,8 @@ def operation_switch_gpt(sender, _, group_id):
         global_var.use_chatgpt = not global_var.use_chatgpt
         print("use_chatgpt:", global_var.use_chatgpt)
         if is_not_remote_machine():
-            at_user_in_group(sender, sender, "已切换至chatGPT" if global_var.use_chatgpt else "已切换至GPT3", group_id)
+            at_user_in_group(sender, sender, "已切换至chatGPT" if global_var.use_chatgpt else (
+                "已切换至自托管模型" if config.use_selfhostedllm else "已切换至GPT3"), group_id)
     else:
         if is_remote_machine():
             at_user_in_group(sender, sender, "权限不足", group_id)
