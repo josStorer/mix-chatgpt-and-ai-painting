@@ -46,7 +46,7 @@ project can inspire or help you, I would be honored.
    如果你是从源代码安装, 可参考https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running,
    如果你下载的是他人的整合包, 可略过
 5. 从huggingface下载模型权重,
-   如[Anything](https://huggingface.co/andite/anything-v4.0/tree/main), [MixPro](https://civitai.com/models/14206), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
+   如[Anything](https://civitai.com/models/9409), [MixPro](https://civitai.com/models/14206), [OrangeMixs](https://huggingface.co/WarriorMama777/OrangeMixs/tree/main),
    放置在stable-diffusion-webui的`models/Stable-diffusion`目录下
 6. 启动stable-diffusion-webui,
    可以参考官方项目在不同系统的[启动说明](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running),
