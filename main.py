@@ -107,7 +107,7 @@ def chat_handler_thread(group_id, question, sender, channel_id, is_guild):
                                                       timeout=api_timeout, stop=['Human:', 'AI:'])
                 answer = completion.choices[0].text
         except Exception as e:
-            send_err_to_group(sender, e, group_id)
+            send_err_to_group(sender, e, group_id, channel_id, is_guild)
             return
     else:
         try:
@@ -132,7 +132,7 @@ def chat_handler_thread(group_id, question, sender, channel_id, is_guild):
                                                           timeout=api_timeout)
                 answer = completion.choices[0].message.content
         except Exception as e:
-            send_err_to_group(sender, e, group_id)
+            send_err_to_group(sender, e, group_id, channel_id, is_guild)
             return
 
     global_var.chat_history[get_sender_key_in_group(group_id, sender)].append({"question": question, "answer": answer})
