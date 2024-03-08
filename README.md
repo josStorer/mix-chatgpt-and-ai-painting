@@ -37,7 +37,7 @@ project can inspire or help you, I would be honored.
 ## 食用方法
 
 1. 下载[go-cqhttp](https://github.com/Mrs4s/go-cqhttp/releases), 注意底部`show all ...`展开,
-   windows一般使用windows_amd64.exe **由于go-cqhttp宣布停止维护, 你现在可以使用https://github.com/LLOneBot/LLOneBot作为替代, 在设置中启用正向Websocket连接即可, 其余内容照旧**
+   windows一般使用windows_amd64.exe **由于go-cqhttp宣布停止维护, 你现在可以使用 https://github.com/LLOneBot/LLOneBot 作为替代, 在设置中启用正向Websocket连接即可, 其余内容照旧**
 2. 启动cmd窗口, 打开到go-cqhttp所在路径, 然后通过命令行输入程序名启动, 并选择正向websocket模式
 3. 扫码登录你的qq机器人, 如果提示协议不支持扫码, 可以打开device.json文件, 将protocol改为2, 如果提示账号被风控, 发送失败,
    尝试使用协议3, 更稳定, 如果需要使用QQ频道, 请用协议5
